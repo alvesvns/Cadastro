@@ -7,21 +7,22 @@
  *
  * @author karan
  */
-public class finaltela extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(finaltela.class.getName());
+public class FinalTela extends javax.swing.JFrame {
+    private DadosCadastro d;
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalTela.class.getName());
 
     /**
      * Creates new form finaltela
      */
-    public finaltela(String nome, String nascFormatada, String cpf, String rua, String bairro, String cidade, String uf, String cep) {
-        initComponents();  // Inicializa os componentes da tela
-        
+    public FinalTela(DadosCadastro d) { // Inicializa os componentes da tela
+        initComponents();
+        this.d = d;
         // Exibe os dados recebidos nos JLabels
-        lblNome.setText("Nome: " + nome);
-        lblNascimento.setText("Nascimento: " + nascFormatada);
-        lblCpf.setText("CPF: " + cpf);
-        lblEndereco.setText("Endereço: " + rua + ", " + bairro + ", " + cidade + " - " + uf + " - " + cep);
+        lblNome.setText("Nome: " + d.getNome());
+        lblNascimento.setText("Nascimento: " + d.getNascFormatada());
+        lblCpf.setText("CPF: " + d.getCpf());
+        lblEndereco.setText("Endereço: " + d.getRua() + ", " + d.getBairro() + ", " 
+                + d.getCidade() + " - " + d.getUf() + " - " + d.getCep());
     }
 
     /**
@@ -39,6 +40,7 @@ public class finaltela extends javax.swing.JFrame {
         lblEndereco = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         btnFinalizar = new javax.swing.JButton();
+        btnVoltar1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -54,6 +56,9 @@ public class finaltela extends javax.swing.JFrame {
 
         btnFinalizar.setText("FINALIZAR");
         btnFinalizar.addActionListener(this::btnFinalizarActionPerformed);
+
+        btnVoltar1.setText("VOLTAR");
+        btnVoltar1.addActionListener(this::btnVoltar1ActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,7 +83,8 @@ public class finaltela extends javax.swing.JFrame {
                         .addComponent(jLabel9))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(lblNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblNascimento, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnVoltar1))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -96,7 +102,8 @@ public class finaltela extends javax.swing.JFrame {
                 .addComponent(lblEndereco)
                 .addGap(64, 64, 64)
                 .addComponent(btnFinalizar)
-                .addContainerGap(78, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addComponent(btnVoltar1))
         );
 
         pack();
@@ -105,6 +112,12 @@ public class finaltela extends javax.swing.JFrame {
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnFinalizarActionPerformed
+
+    private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed
+    Endereco telaEndereco = new Endereco(d);
+    telaEndereco.setVisible(true);
+    this.dispose();        
+    }//GEN-LAST:event_btnVoltar1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -133,6 +146,7 @@ public class finaltela extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFinalizar;
+    private javax.swing.JButton btnVoltar1;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lblCpf;
     private javax.swing.JLabel lblEndereco;

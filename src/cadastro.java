@@ -17,17 +17,25 @@ import javax.swing.JOptionPane;
  *
  * @author karan
  */
-public class cadastro extends javax.swing.JFrame {
+public class Cadastro extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(cadastro.class.getName());
+    private DadosCadastro d;
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Cadastro.class.getName());
 
     /**
      * Creates new form cadastro
      */
-    public cadastro() {
+    public Cadastro() {
         initComponents();
+        this.d = new DadosCadastro();
     }
 
+    public Cadastro(DadosCadastro d) {
+    initComponents();
+    this.d = d;
+    preencherCampos();
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -151,49 +159,58 @@ public class cadastro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void preencherCampos() {
+    if (d == null) return;
+
+    if (d.getNome() != null) txtNome.setText(d.getNome());
+    if (d.getCpf() != null) txtCpf.setText(d.getCpf()); 
+    if (d.getNascimento() != null) {
+        java.util.Date data = java.util.Date.from(d.getNascimento()
+                .atStartOfDay(java.time.ZoneId.systemDefault())
+                .toInstant()
+        );
+        spnNasc.setValue(data);
+    }
+    }
+    
     private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNomeActionPerformed
-
+    
     private void btnConsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsActionPerformed
         // TODO add your handling code here:
-        String nome = (txtNome.getText());
+        String nome = txtNome.getText();
+        String cpf = txtCpf.getText();
         
-        String cpf = (txtCpf.getText());
+        java.util.Date dataNasc = (java.util.Date) spnNasc.getValue();
+        java.time.LocalDate nascimento = dataNasc.toInstant()
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate();
         
-        Date dataNasc = (Date)spnNasc.getValue();
-        LocalDate nascimento = dataNasc.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        d.setNascimento(nascimento);
+        
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
         String nascFormatada = sdf.format(dataNasc);
         
-      
-        int idade = Period.between(nascimento, LocalDate.now()).getYears();
+        d.setNome(nome);
+        d.setCpf(cpf);
+        d.setNascimento(nascimento);
+        d.setNascFormatada(nascFormatada);
         
-        String erros = "";
+        java.util.List<String> erros = ValidadorCadastro.validar(d);
         
-        if (nome.length() < 3) {
-            erros += "- Nome inválido\n";
-        } else if (nome.matches(".*\\d.*")) {
-            erros += "- Nome inválido\n";
-            }
-        
-        if (idade < 16) {
-            erros += "- É necessário ter no mínimo 16 anos\n";
-        }
-        
-        String cpfNumeros = cpf.replaceAll("\\D", "");
-        if (cpfNumeros.length() != 11){
-            erros += "- CPF incompleto\n";
-        }
-        
-        if (!erros.isEmpty()){
-            JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + erros);
+        if (!erros.isEmpty()) {
+            String msg = String.join("\n", erros);
+            javax.swing.JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
             return;
         }
+        d.setNome(txtNome.getText());
+        d.setCpf(txtCpf.getText());
+        d.setNascFormatada(nascFormatada);
         
-endereco telaEndereco = new endereco(nome, nascFormatada, cpf); 
-    telaEndereco.setVisible(true);
-    this.dispose();
+        Endereco telaEndereco = new Endereco (d);
+        telaEndereco.setVisible(true);
+        this.setVisible(false);
 
     }//GEN-LAST:event_btnConsActionPerformed
 
@@ -203,7 +220,7 @@ endereco telaEndereco = new endereco(nome, nascFormatada, cpf);
   
         
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new cadastro().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new Cadastro().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

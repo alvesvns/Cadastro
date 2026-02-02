@@ -8,27 +8,51 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.URI;
+import java.net.ConnectException;
+import java.net.UnknownHostException;
+import java.net.SocketTimeoutException;
+import java.time.Duration;
+
 
 /**
  *
  * @author karan
  */
-public class endereco extends javax.swing.JFrame {
-        private String nome;
-    private String nascimento;
-    private String cpf;
+public class Endereco extends javax.swing.JFrame {
+    private DadosCadastro d;
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(endereco.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
 
     /**
      * Creates new form endereco
      */
-    public endereco(String nome, String nascimento, String cpf) {
-        initComponents();  // Inicializa os componentes da tela
-        this.nome = nome;  // Armazena os dados da Tela 1
-        this.nascimento = nascimento;
-        this.cpf = cpf;
-    }
+    
+    public Endereco() {
+    initComponents();
+    this.d = new DadosCadastro(); 
+    preencherUF();
+    preencherCampos();
+}
+
+    public Endereco(DadosCadastro d) {
+    initComponents();
+    this.d = d;                 
+    preencherUF();
+    preencherCampos();
+}
+
+    
+    private void preencherUF() {
+    cmbUf.setModel(new javax.swing.DefaultComboBoxModel<>(
+        new String[] {
+            "Selecione",
+            "AC","AL","AP","AM","BA","CE","DF","ES","GO",
+            "MA","MT","MS","MG","PA","PB","PR","PE","PI",
+            "RJ","RN","RS","RO","RR","SC","SP","SE","TO"
+        }
+    ));
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,8 +72,9 @@ public class endereco extends javax.swing.JFrame {
         txtRua = new javax.swing.JTextField();
         txtBairro = new javax.swing.JTextField();
         txtCidade = new javax.swing.JTextField();
-        txtUf = new javax.swing.JTextField();
         btnCadastrar = new javax.swing.JButton();
+        cmbUf = new javax.swing.JComboBox<>();
+        btnVoltar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,11 +104,14 @@ public class endereco extends javax.swing.JFrame {
 
         txtCidade.addActionListener(this::txtCidadeActionPerformed);
 
-        txtUf.addActionListener(this::txtUfActionPerformed);
-
         btnCadastrar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCadastrar.setText("CADASTRAR");
         btnCadastrar.addActionListener(this::btnCadastrarActionPerformed);
+
+        cmbUf.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnVoltar.setText("VOLTAR");
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,13 +127,16 @@ public class endereco extends javax.swing.JFrame {
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtCidade)
-                                .addComponent(txtUf, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE))
-                            .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnCadastrar)
-                        .addGap(24, 24, 24))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                                .addComponent(btnCadastrar)
+                                .addGap(24, 24, 24))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbUf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -114,7 +145,10 @@ public class endereco extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtRua, javax.swing.GroupLayout.DEFAULT_SIZE, 151, Short.MAX_VALUE)
                             .addComponent(txtCep))
-                        .addContainerGap(169, Short.MAX_VALUE))))
+                        .addContainerGap())))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(btnVoltar)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,17 +171,31 @@ public class endereco extends javax.swing.JFrame {
                     .addComponent(jLabel4)
                     .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel5)
-                    .addComponent(txtUf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(101, Short.MAX_VALUE))
+                    .addComponent(cmbUf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                .addComponent(btnVoltar))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void preencherCampos() {
+    if (d.getCep() != null) txtCep.setText(d.getCep());
+    if (d.getRua() != null) txtRua.setText(d.getRua());
+    if (d.getBairro() != null) txtBairro.setText(d.getBairro());
+    if (d.getCidade() != null) txtCidade.setText(d.getCidade());
+
+    if (d.getUf() != null && !d.getUf().isBlank()) {
+        cmbUf.setSelectedItem(d.getUf());
+    } else {
+        cmbUf.setSelectedIndex(0);
+    }
+}
+
     private void txtCepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCepActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_txtCepActionPerformed
 
     private void txtBairroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBairroActionPerformed
@@ -157,10 +205,6 @@ public class endereco extends javax.swing.JFrame {
     private void txtCidadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCidadeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCidadeActionPerformed
-
-    private void txtUfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUfActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtUfActionPerformed
 
     private void txtCepKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyReleased
         String cep = txtCep.getText().replaceAll("\\D", "");
@@ -174,12 +218,52 @@ public class endereco extends javax.swing.JFrame {
         String rua = txtRua.getText();
         String bairro = txtBairro.getText();
         String cidade = txtCidade.getText();
-        String uf = txtUf.getText();
+        String uf = cmbUf.getSelectedItem().toString();
 
-        // Passa todos os dados para a Tela Final
-        new finaltela(nome, nascimento, cpf, rua, bairro, cidade, uf, cep).setVisible(true);
-        this.dispose();     // TODO add your handling code here:
+
+        String cepNumeros = cep.replaceAll("\\D", ""); 
+
+        if (cepNumeros.length() != 8) {
+        JOptionPane.showMessageDialog(this, "CEP inválido. Digite 8 números.");
+        txtCep.requestFocus();
+        return;
+        }
+
+        if (rua.trim().isEmpty() || bairro.trim().isEmpty() || cidade.trim().isEmpty() || uf.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Busque um CEP válido antes de cadastrar.");
+        txtCep.requestFocus();
+        return;
+        }
+
+        if (cmbUf.getSelectedIndex() == 0) {
+        JOptionPane.showMessageDialog(this, "Selecione um UF válido.");
+        cmbUf.requestFocus();
+        return;
+}
+        d.setCep(txtCep.getText());
+        d.setRua(txtRua.getText());
+        d.setBairro(txtBairro.getText());
+        d.setCidade(txtCidade.getText());
+        d.setUf(cmbUf.getSelectedItem().toString());
+
+        FinalTela telaFinal = new FinalTela(d);
+        telaFinal.setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_btnCadastrarActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+    d.setCep(txtCep.getText());
+    d.setRua(txtRua.getText());
+    d.setBairro(txtBairro.getText());
+    d.setCidade(txtCidade.getText());
+    d.setUf(cmbUf.getSelectedItem().toString());
+
+    Cadastro tela = new Cadastro(d);
+    tela.setVisible(true);
+    this.dispose();
+    // TODO add your handling code here:
+    }//GEN-LAST:event_btnVoltarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -207,22 +291,32 @@ public class endereco extends javax.swing.JFrame {
         
     }
     private void buscarCep(String cep) {
-             txtRua.setText("");
-             txtBairro.setText("");
-             txtCidade.setText("");
-             txtUf.setText("");
+    txtRua.setText("");
+    txtBairro.setText("");
+    txtCidade.setText("");
+    cmbUf.setSelectedIndex(0);
 
     new SwingWorker<String, Void>() {
         @Override
-        protected String doInBackground() throws Exception {
-            HttpClient client = HttpClient.newHttpClient();
+        protected String doInBackground() {
+            try {
+                HttpClient client = HttpClient.newBuilder()
+                        .connectTimeout(Duration.ofSeconds(3))
+                        .build();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://viacep.com.br/ws/" + cep + "/json/"))
-                    .GET()
-                    .build();
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create("https://viacep.com.br/ws/" + cep + "/json/"))
+                        .timeout(Duration.ofSeconds(5))
+                        .GET()
+                        .build();
 
-            return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+                return client.send(request, HttpResponse.BodyHandlers.ofString()).body();
+
+            } catch (UnknownHostException | ConnectException | SocketTimeoutException e) {
+                return null;
+            } catch (Exception e) {
+                return "ERRO";
+            }
         }
 
         @Override
@@ -230,23 +324,36 @@ public class endereco extends javax.swing.JFrame {
             try {
                 String json = get();
 
-                if (json.contains("\"erro\": true")) {
-                    JOptionPane.showMessageDialog(endereco.this, "CEP não encontrado");
+                if (json == null) {
+                    JOptionPane.showMessageDialog(Endereco.this,
+                            "Sem internet. Verifique sua conexão e tente novamente.");
                     return;
                 }
 
-                txtRua.setText(pegarValor(json, "logradouro"));
-                txtBairro.setText(pegarValor(json, "bairro"));
-                txtCidade.setText(pegarValor(json, "localidade"));
-                txtUf.setText(pegarValor(json, "uf"));
+                if ("ERRO".equals(json)) {
+                    JOptionPane.showMessageDialog(Endereco.this,
+                            "Erro ao buscar CEP.");
+                    return;
+                }
+
+                if (json.contains("\"erro\": true")) {
+                    JOptionPane.showMessageDialog(Endereco.this, "CEP não encontrado");
+                    return;
+                }
+
+                txtRua.setText(getValue(json, "logradouro"));
+                txtBairro.setText(getValue(json, "bairro"));
+                txtCidade.setText(getValue(json, "localidade"));
+                cmbUf.setSelectedItem(getValue(json, "uf"));
 
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(endereco.this, "Erro ao buscar CEP");
+                JOptionPane.showMessageDialog(Endereco.this, "Erro ao buscar CEP.");
             }
         }
     }.execute();
 }
-    private String pegarValor(String json, String chave) {
+
+    private String getValue(String json, String chave) {
     String busca = "\"" + chave + "\":";
     int i = json.indexOf(busca);
     if (i == -1) return "";
@@ -261,6 +368,8 @@ public class endereco extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
+    private javax.swing.JButton btnVoltar;
+    private javax.swing.JComboBox<String> cmbUf;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -270,6 +379,5 @@ public class endereco extends javax.swing.JFrame {
     private javax.swing.JFormattedTextField txtCep;
     private javax.swing.JTextField txtCidade;
     private javax.swing.JTextField txtRua;
-    private javax.swing.JTextField txtUf;
     // End of variables declaration//GEN-END:variables
 }
