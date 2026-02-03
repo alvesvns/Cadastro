@@ -19,7 +19,7 @@ public class FinalTela extends javax.swing.JFrame {
         this.d = d;
         // Exibe os dados recebidos nos JLabels
         lblNome.setText("Nome: " + d.getNome());
-        lblNascimento.setText("Nascimento: " + d.getNascFormatada());
+        lblNascimento.setText("Nascimento: " + d.getNascFormatada() + " - " + d.getIdade() + " anos");
         lblCpf.setText("CPF: " + d.getCpf());
         lblEndereco.setText("Endereço: " + d.getRua() + ", " + d.getBairro() + ", " 
                 + d.getCidade() + " - " + d.getUf() + " - " + d.getCep());
@@ -110,7 +110,7 @@ public class FinalTela extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        // TODO add your handling code here:
+        this.dispose();
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed
