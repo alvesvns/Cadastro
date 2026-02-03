@@ -1,4 +1,4 @@
-# NetBeans
+
 /nbproject/private/
 /build/
 /dist/
@@ -6,19 +6,19 @@
 /nbdist/
 /.nb-gradle/
 
-# Arquivos temporários
+
 *.log
 *.tmp
 *.swp
 
-# Sistema operacional
+
 .DS_Store
 Thumbs.db
 
-# IDEs
+
 .idea/
 .vscode/
 
-# Java
+
 *.class
 

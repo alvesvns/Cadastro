@@ -1,15 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValidadorCadastro {
+public class RegistrationValidator {
 
-    public static List<String> validar(DadosCadastro d) {
+    public static List<String> validateName(RegistrationData d) {
         List<String> erros = new ArrayList<>();
 
         String nome = d.getNome() == null ? "" : d.getNome().trim();
@@ -44,14 +41,14 @@ public class ValidadorCadastro {
             }
         }
 
-        if (!cpfValido(d.getCpf())) {
+        if (!cpfValidate(d.getCpf())) {
             erros.add("- CPF inválido");
         }
 
         return erros;
     }
 
-    private static boolean cpfValido(String cpf) {
+    private static boolean cpfValidate(String cpf) {
         if (cpf == null) return false;
 
         cpf = cpf.replaceAll("\\D", "");
