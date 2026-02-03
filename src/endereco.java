@@ -211,10 +211,6 @@ public class Endereco extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCepKeyReleased
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
-        TesteLombok t = new TesteLombok();
-t.setNome("Vinicius");
-System.out.println(t.getNome());
-
         
         RegistrationAddress e = dto.getE();
         if (e == null) {
