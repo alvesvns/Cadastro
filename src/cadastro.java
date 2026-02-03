@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
 
+
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -70,7 +72,7 @@ public class cadastro extends javax.swing.JFrame {
         txtNome.addActionListener(this::txtNomeActionPerformed);
 
         btnCons.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnCons.setText("CADASTRAR");
+        btnCons.setText("PROXIMO");
         btnCons.addActionListener(this::btnConsActionPerformed);
 
         spnNasc.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1769604803492L), new java.util.Date(-2208942032000L), new java.util.Date(1769604803492L), java.util.Calendar.DAY_OF_MONTH));
@@ -189,11 +191,10 @@ public class cadastro extends javax.swing.JFrame {
             return;
         }
         
-        JOptionPane.showMessageDialog(this,
-        "Dados válidos!\n" +
-        "Nome: " + nome + "\n" +
-        "Nasc: " + nascFormatada + " (" + idade + " anos)\n" +
-        "CPF: " + cpf);
+endereco telaEndereco = new endereco(nome, nascFormatada, cpf); 
+    telaEndereco.setVisible(true);
+    this.dispose();
+
     }//GEN-LAST:event_btnConsActionPerformed
 
     private void txtCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCpfActionPerformed
