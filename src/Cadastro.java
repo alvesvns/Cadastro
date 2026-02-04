@@ -6,25 +6,25 @@ import java.text.SimpleDateFormat;
 import javax.swing.JOptionPane;
 
 public class Cadastro extends javax.swing.JFrame {
-    private RegistrationDTO dto;
+    private RegistrationDTO registrationDto;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Cadastro.class.getName());
 
     public Cadastro() {
         initComponents();
-        dto = new RegistrationDTO();
-        dto.setD(new RegistrationData());
-        dto.setE(new RegistrationAddress());
+        registrationDto = new RegistrationDTO();
+        registrationDto.setRegistrationData(new RegistrationData());
+        registrationDto.setRegistrationAddress(new RegistrationAddress());
         
     }
 
-    public Cadastro(RegistrationDTO dto) {
+    public Cadastro(RegistrationDTO registrationDto) {
     initComponents();
 
-    this.dto = dto;
+    this.registrationDto = registrationDto;
 
-    if (this.dto.getD() == null) this.dto.setD(new RegistrationData());
-    if (this.dto.getE() == null) this.dto.setE(new RegistrationAddress());
+    if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+    if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
     toFill();
 }
@@ -148,14 +148,16 @@ public class Cadastro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void toFill() {
-    if (dto == null) return;
+        
+        if (registrationDto == null) return;
     
-    RegistrationData d = dto.getD();
+            RegistrationData registrationData = registrationDto.getRegistrationData();
 
-    if (d.getNome() != null) txtNome.setText(d.getNome());
-    if (d.getCpf() != null) txtCpf.setText(d.getCpf()); 
-    if (d.getNascimento() != null) {
-        Date data = java.util.Date.from(d.getNascimento()
+                if (registrationData.getNome() != null) txtNome.setText(registrationData.getNome());
+                    if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
+                        if (registrationData.getNascimento() != null) {
+                            
+                Date data = java.util.Date.from(registrationData.getNascimento()
                 .atStartOfDay(java.time.ZoneId.systemDefault())
                 .toInstant()
         );
@@ -168,42 +170,42 @@ public class Cadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNomeActionPerformed
     
     private void btnConsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsActionPerformed
-        RegistrationData d = dto.getD();
+        RegistrationData registrationData = registrationDto.getRegistrationData();
         
-        if (dto.getE() == null) {
-        dto.setE(new RegistrationAddress());
+        if (registrationDto.getRegistrationAddress() == null) {
+        registrationDto.setRegistrationAddress(new RegistrationAddress());
     }
         
         String nome = txtNome.getText();
         String cpf = txtCpf.getText();
         
-        java.util.Date dataNasc = (java.util.Date) spnNasc.getValue();
-        java.time.LocalDate nascimento = dataNasc.toInstant()
-                .atZone(java.time.ZoneId.systemDefault())
-                .toLocalDate();
+                Date dataNasc = (java.util.Date) spnNasc.getValue();
+                    LocalDate nascimento = dataNasc.toInstant()
+                        .atZone(java.time.ZoneId.systemDefault())
+                        .toLocalDate();
         
-        d.setNascimento(nascimento);
+        registrationData.setNascimento(nascimento);
         
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-        String nascFormatada = sdf.format(dataNasc);
+                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                    String nascFormatada = sdf.format(dataNasc);
         
-        d.setNome(nome);
-        d.setCpf(cpf);
-        d.setNascimento(nascimento);
-        d.setNascFormatada(nascFormatada);
+        registrationData.setNome(nome);
+        registrationData.setCpf(cpf);
+        registrationData.setNascimento(nascimento);
+        registrationData.setNascFormatada(nascFormatada);
         
-        java.util.List<String> erros = RegistrationValidator.validateName(d);
+        java.util.List<String> erros = ValidatorAll.validateAll(registrationData);
         
         if (!erros.isEmpty()) {
             String msg = String.join("\n", erros);
             javax.swing.JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
             return;
         }
-        d.setNome(txtNome.getText());
-        d.setCpf(txtCpf.getText());
-        d.setNascFormatada(nascFormatada);
+        registrationData.setNome(txtNome.getText());
+        registrationData.setCpf(txtCpf.getText());
+        registrationData.setNascFormatada(nascFormatada);
         
-        Endereco telaEndereco = new Endereco (dto);
+        Endereco telaEndereco = new Endereco (registrationDto);
         telaEndereco.setVisible(true);
         this.setVisible(false);
 

@@ -1,25 +1,25 @@
 
 public class FinalTela extends javax.swing.JFrame{
     
-    private RegistrationDTO dto;
+    private RegistrationDTO registrationDto;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalTela.class.getName());
 
-     public FinalTela(RegistrationDTO dto) { 
+     public FinalTela(RegistrationDTO registrationDto) { 
         initComponents();
-        this.dto = dto;
+        this.registrationDto = registrationDto;
                 
-        if (this.dto.getD() == null) this.dto.setD(new RegistrationData());
-        if (this.dto.getE() == null) this.dto.setE(new RegistrationAddress());
+            if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+            if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
-        RegistrationData d = this.dto.getD();
-        RegistrationAddress e = this.dto.getE();
+    RegistrationData registrationData = this.registrationDto.getRegistrationData();
+    RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
         
-        lblNome.setText("Nome: " + d.getNome());
-        lblNascimento.setText("Nascimento: " + d.getNascFormatada() + " - " + d.getIdade() + " anos");
-        lblCpf.setText("CPF: " + d.getCpf());
-        lblEndereco.setText("Endereço: " + e.getRua() + ", " + e.getBairro() + ", " 
-                + e.getCidade() + " - " + e.getUf() + " - " + e.getCep());
+            lblNome.setText("Nome: " + registrationData.getNome());
+            lblNascimento.setText("Nascimento: " + registrationData.getNascFormatada() + " - " + registrationData.getIdade() + " anos");
+            lblCpf.setText("CPF: " + registrationData.getCpf());
+            lblEndereco.setText("Endereço: " + registrationAddress.getRua() + ", " + registrationAddress.getBairro() + ", " 
+            + registrationAddress.getCidade() + " - " + registrationAddress.getUf() + " - " + registrationAddress.getCep());
     }
 
     
@@ -108,7 +108,7 @@ public class FinalTela extends javax.swing.JFrame{
 
     private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed
    
-    Endereco telaEndereco = new Endereco(dto);
+    Endereco telaEndereco = new Endereco(registrationDto);
     telaEndereco.setVisible(true);
     this.dispose();        
     }//GEN-LAST:event_btnVoltar1ActionPerformed

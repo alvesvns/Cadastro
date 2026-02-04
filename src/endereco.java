@@ -13,7 +13,7 @@ import java.time.Duration;
 
 
 public class Endereco extends javax.swing.JFrame {
-    private RegistrationDTO dto;
+    private RegistrationDTO registrationDto;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
 
@@ -21,27 +21,27 @@ public class Endereco extends javax.swing.JFrame {
     public Endereco() {
     initComponents();
 
-    this.dto = new RegistrationDTO();
-    this.dto.setD(new RegistrationData());
-    this.dto.setE(new RegistrationAddress());
+            this.registrationDto = new RegistrationDTO();
+            this.registrationDto.setRegistrationData(new RegistrationData());
+            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
-    fillUF();
-    toFill();
+    setListUf();
+    setInfoForm();
 }
 
-    public Endereco(RegistrationDTO dto) {
+    public Endereco(RegistrationDTO registrationDto) {
     initComponents();
-    this.dto = dto;
+    this.registrationDto = registrationDto;
 
-    if (this.dto.getD() == null) this.dto.setD(new RegistrationData());
-    if (this.dto.getE() == null) this.dto.setE(new RegistrationAddress());
+            if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+            if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
-    fillUF();
-    toFill();
+    setListUf();
+    setInfoForm();
 }
 
     
-    private void fillUF() {
+    private void setListUf() {
     cmbUf.setModel(new javax.swing.DefaultComboBoxModel<>(
         new String[] {
             "Selecione",
@@ -176,16 +176,17 @@ public class Endereco extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void toFill() {
-        RegistrationAddress e = dto.getE();
-        if (e == null) return;
-    if (e.getCep() != null) txtCep.setText(e.getCep());
-    if (e.getRua() != null) txtRua.setText(e.getRua());
-    if (e.getBairro() != null) txtBairro.setText(e.getBairro());
-    if (e.getCidade() != null) txtCidade.setText(e.getCidade());
+    private void setInfoForm() {
+        
+    RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
+        if (registrationAddress == null) return;
+        if (registrationAddress.getCep() != null) txtCep.setText(registrationAddress.getCep());
+        if (registrationAddress.getRua() != null) txtRua.setText(registrationAddress.getRua());
+        if (registrationAddress.getBairro() != null) txtBairro.setText(registrationAddress.getBairro());
+        if (registrationAddress.getCidade() != null) txtCidade.setText(registrationAddress.getCidade());
 
-    if (e.getUf() != null && !e.getUf().isBlank()) {
-        cmbUf.setSelectedItem(e.getUf());
+    if (registrationAddress.getUf() != null && !registrationAddress.getUf().isBlank()) {
+        cmbUf.setSelectedItem(registrationAddress.getUf());
     } else {
         cmbUf.setSelectedIndex(0);
     }
@@ -205,17 +206,17 @@ public class Endereco extends javax.swing.JFrame {
 
     private void txtCepKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyReleased
         String cep = txtCep.getText().replaceAll("\\D", "");
-        if (cep.length()==8){
-            buscarCep(cep);
+            if (cep.length()==8){
+            getCep(cep);
         }  
     }//GEN-LAST:event_txtCepKeyReleased
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         
-        RegistrationAddress e = dto.getE();
-        if (e == null) {
-        dto.setE(new RegistrationAddress());
-        e = dto.getE();
+        RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
+            if (registrationAddress == null) {
+                registrationDto.setRegistrationAddress(new RegistrationAddress());
+                    registrationAddress = registrationDto.getRegistrationAddress();
     }
         
         String cep = txtCep.getText();
@@ -228,44 +229,44 @@ public class Endereco extends javax.swing.JFrame {
         String cepNumeros = cep.replaceAll("\\D", ""); 
 
         if (cepNumeros.length() != 8) {
-        JOptionPane.showMessageDialog(this, "CEP inválido. Digite 8 números.");
-        txtCep.requestFocus();
+            JOptionPane.showMessageDialog(this, "CEP inválido. Digite 8 números.");
+                txtCep.requestFocus();
         return;
         }
 
         if (rua.trim().isEmpty() || bairro.trim().isEmpty() || cidade.trim().isEmpty() || uf.trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Busque um CEP válido antes de cadastrar.");
-        txtCep.requestFocus();
+            JOptionPane.showMessageDialog(this, "Busque um CEP válido antes de cadastrar.");
+                txtCep.requestFocus();
         return;
         }
 
         if (cmbUf.getSelectedIndex() == 0) {
-        JOptionPane.showMessageDialog(this, "Selecione um UF válido.");
-        cmbUf.requestFocus();
+            JOptionPane.showMessageDialog(this, "Selecione um UF válido.");
+                cmbUf.requestFocus();
         return;
 }
-        e.setCep(txtCep.getText());
-        e.setRua(txtRua.getText());
-        e.setBairro(txtBairro.getText());
-        e.setCidade(txtCidade.getText());
-        e.setUf(cmbUf.getSelectedItem().toString());
+        registrationAddress.setCep(txtCep.getText());
+        registrationAddress.setRua(txtRua.getText());
+        registrationAddress.setBairro(txtBairro.getText());
+        registrationAddress.setCidade(txtCidade.getText());
+        registrationAddress.setUf(cmbUf.getSelectedItem().toString());
 
-        FinalTela telaFinal = new FinalTela(dto);
+        FinalTela telaFinal = new FinalTela(registrationDto);
         telaFinal.setVisible(true);
         this.dispose();
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-    RegistrationAddress e = dto.getE();
+    RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
     
-    e.setCep(txtCep.getText());
-    e.setRua(txtRua.getText());
-    e.setBairro(txtBairro.getText());
-    e.setCidade(txtCidade.getText());
-    e.setUf(cmbUf.getSelectedItem().toString());
+    registrationAddress.setCep(txtCep.getText());
+    registrationAddress.setRua(txtRua.getText());
+    registrationAddress.setBairro(txtBairro.getText());
+    registrationAddress.setCidade(txtCidade.getText());
+    registrationAddress.setUf(cmbUf.getSelectedItem().toString());
 
-    Cadastro tela = new Cadastro(dto);
+    Cadastro tela = new Cadastro(registrationDto);
     tela.setVisible(true);
     this.dispose();
     // TODO add your handling code here:
@@ -276,7 +277,7 @@ public class Endereco extends javax.swing.JFrame {
         
         
     }
-    private void buscarCep(String cep) {
+    private void getCep(String cep) {
     txtRua.setText("");
     txtBairro.setText("");
     txtCidade.setText("");
@@ -300,7 +301,7 @@ public class Endereco extends javax.swing.JFrame {
 
             } catch (UnknownHostException | ConnectException | SocketTimeoutException e) {
                 return null;
-            } catch (Exception e) {
+            } catch (Exception registrationAddress) {
                 return "ERRO";
             }
         }
@@ -332,7 +333,7 @@ public class Endereco extends javax.swing.JFrame {
                 txtCidade.setText(getValue(json, "localidade"));
                 cmbUf.setSelectedItem(getValue(json, "uf"));
 
-            } catch (Exception e) {
+            } catch (Exception registrationAddress) {
                 JOptionPane.showMessageDialog(Endereco.this, "Erro ao buscar CEP.");
             }
         }
@@ -340,13 +341,13 @@ public class Endereco extends javax.swing.JFrame {
 }
 
     private String getValue(String json, String chave) {
-    String busca = "\"" + chave + "\":";
-    int i = json.indexOf(busca);
-    if (i == -1) return "";
+        String busca = "\"" + chave + "\":";
+            int i = json.indexOf(busca);
+            if (i == -1) return "";
 
     int inicio = json.indexOf("\"", i + busca.length()) + 1;
-    int fim = json.indexOf("\"", inicio);
-    if (inicio < 0 || fim < 0) return "";
+            int fim = json.indexOf("\"", inicio);
+            if (inicio < 0 || fim < 0) return "";
 
     return json.substring(inicio, fim);
 }
