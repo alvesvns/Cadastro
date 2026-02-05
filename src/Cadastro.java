@@ -18,14 +18,14 @@ public class Cadastro extends javax.swing.JFrame {
     }
 
     public Cadastro(RegistrationDTO registrationDto) {
-    initComponents();
-
-    this.registrationDto = registrationDto;
+        initComponents();
+        
+        this.registrationDto = registrationDto;
 
         if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
         if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
-    toFill();
+        setInfoForm();
     }
 
     @SuppressWarnings("unchecked")
@@ -146,7 +146,7 @@ public class Cadastro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void toFill() {
+    private void setInfoForm() {
         
         if (registrationDto == null) return;
     
@@ -157,8 +157,7 @@ public class Cadastro extends javax.swing.JFrame {
         if (registrationData.getBirth() != null) {              
             Date data = java.util.Date.from(registrationData.getBirth()
                 .atStartOfDay(java.time.ZoneId.systemDefault())
-                .toInstant());
-
+                    .toInstant());
             spnBirth.setValue(data);
         }
     }
@@ -179,8 +178,8 @@ public class Cadastro extends javax.swing.JFrame {
         
         Date dateBirth = (java.util.Date) spnBirth.getValue();
         LocalDate birth = dateBirth.toInstant()
-        .atZone(java.time.ZoneId.systemDefault())
-        .toLocalDate();
+                .atZone(java.time.ZoneId.systemDefault())
+                .toLocalDate();
         
         registrationData.setBirth(birth);
         

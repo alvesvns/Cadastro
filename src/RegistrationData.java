@@ -22,7 +22,7 @@ public class RegistrationData {
         erros.addAll(validateName());
         erros.addAll(validateAge());
         erros.addAll(validateCpf());
-
+        
         return erros;
     }
 

@@ -225,7 +225,6 @@ public class Endereco extends javax.swing.JFrame {
         String cidade = txtCidade.getText();
         String uf = cmbUf.getSelectedItem().toString();
 
-
         String cepNumeros = cep.replaceAll("\\D", ""); 
 
         if (cepNumeros.length() != 8) {
@@ -269,7 +268,6 @@ public class Endereco extends javax.swing.JFrame {
     Cadastro tela = new Cadastro(registrationDto);
     tela.setVisible(true);
     this.dispose();
-    // TODO add your handling code here:
     }//GEN-LAST:event_btnVoltarActionPerformed
 
     private void getCep(String cep) {
