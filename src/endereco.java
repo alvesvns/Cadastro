@@ -21,24 +21,24 @@ public class Endereco extends javax.swing.JFrame {
     public Endereco() {
     initComponents();
 
-            this.registrationDto = new RegistrationDTO();
-            this.registrationDto.setRegistrationData(new RegistrationData());
-            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+    this.registrationDto = new RegistrationDTO();
+    this.registrationDto.setRegistrationData(new RegistrationData());
+    this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
     setListUf();
     setInfoForm();
-}
+    }
 
     public Endereco(RegistrationDTO registrationDto) {
     initComponents();
     this.registrationDto = registrationDto;
 
-            if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-            if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
     setListUf();
     setInfoForm();
-}
+    }
 
     
     private void setListUf() {
@@ -50,7 +50,7 @@ public class Endereco extends javax.swing.JFrame {
             "RJ","RN","RS","RO","RR","SC","SP","SE","TO"
         }
     ));
-}
+    }
 
 
 
@@ -190,7 +190,7 @@ public class Endereco extends javax.swing.JFrame {
     } else {
         cmbUf.setSelectedIndex(0);
     }
-}
+    }
 
     private void txtCepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCepActionPerformed
         
@@ -207,8 +207,8 @@ public class Endereco extends javax.swing.JFrame {
     private void txtCepKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCepKeyReleased
         String cep = txtCep.getText().replaceAll("\\D", "");
             if (cep.length()==8){
-            getCep(cep);
-        }  
+                getCep(cep);
+            }    
     }//GEN-LAST:event_txtCepKeyReleased
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
@@ -216,8 +216,8 @@ public class Endereco extends javax.swing.JFrame {
         RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
             if (registrationAddress == null) {
                 registrationDto.setRegistrationAddress(new RegistrationAddress());
-                    registrationAddress = registrationDto.getRegistrationAddress();
-    }
+                registrationAddress = registrationDto.getRegistrationAddress();
+            }
         
         String cep = txtCep.getText();
         String rua = txtRua.getText();
@@ -244,7 +244,7 @@ public class Endereco extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Selecione um UF válido.");
                 cmbUf.requestFocus();
         return;
-}
+        }
         registrationAddress.setCep(txtCep.getText());
         registrationAddress.setRua(txtRua.getText());
         registrationAddress.setBairro(txtBairro.getText());
@@ -272,11 +272,6 @@ public class Endereco extends javax.swing.JFrame {
     // TODO add your handling code here:
     }//GEN-LAST:event_btnVoltarActionPerformed
 
-    public static void main(String args[])
-    {
-        
-        
-    }
     private void getCep(String cep) {
     txtRua.setText("");
     txtBairro.setText("");
@@ -338,7 +333,7 @@ public class Endereco extends javax.swing.JFrame {
             }
         }
     }.execute();
-}
+    }
 
     private String getValue(String json, String chave) {
         String busca = "\"" + chave + "\":";
@@ -350,7 +345,7 @@ public class Endereco extends javax.swing.JFrame {
             if (inicio < 0 || fim < 0) return "";
 
     return json.substring(inicio, fim);
-}
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

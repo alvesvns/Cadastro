@@ -81,10 +81,10 @@
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txtNome" max="32767" attributes="0"/>
+                          <Component id="txtName" max="32767" attributes="0"/>
                           <Group type="102" attributes="0">
                               <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                              <Component id="spnNasc" min="-2" max="-2" attributes="0"/>
+                              <Component id="spnBirth" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="140" max="-2" attributes="0"/>
                           </Group>
                       </Group>
@@ -102,13 +102,13 @@
               <EmptySpace min="-2" pref="59" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabelNome" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtNome" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtName" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="jLabelNasc" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnCons" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="spnNasc" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="spnBirth" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
@@ -144,9 +144,9 @@
         <Property name="text" type="java.lang.String" value="CPF:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtNome">
+    <Component class="javax.swing.JTextField" name="txtName">
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNomeActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtNameActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnCons">
@@ -160,7 +160,7 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnConsActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JSpinner" name="spnNasc">
+    <Component class="javax.swing.JSpinner" name="spnBirth">
       <Properties>
         <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
           <SpinnerModel initial="1769604803492" maximum="1769604803492" minimum="-2208942032000" stepSize="5" type="date"/>

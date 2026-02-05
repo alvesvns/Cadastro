@@ -1,14 +1,13 @@
 import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.Period;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Cadastro extends javax.swing.JFrame {
     private RegistrationDTO registrationDto;
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Cadastro.class.getName());
+    
 
     public Cadastro() {
         initComponents();
@@ -23,11 +22,11 @@ public class Cadastro extends javax.swing.JFrame {
 
     this.registrationDto = registrationDto;
 
-    if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-    if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
     toFill();
-}
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -38,9 +37,9 @@ public class Cadastro extends javax.swing.JFrame {
         jLabelNome = new javax.swing.JLabel();
         jLabelNasc = new javax.swing.JLabel();
         jLabelCpf = new javax.swing.JLabel();
-        txtNome = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         btnCons = new javax.swing.JButton();
-        spnNasc = new javax.swing.JSpinner();
+        spnBirth = new javax.swing.JSpinner();
         canvas1 = new java.awt.Canvas();
         txtCpf = new javax.swing.JFormattedTextField();
 
@@ -65,14 +64,14 @@ public class Cadastro extends javax.swing.JFrame {
 
         jLabelCpf.setText("CPF:");
 
-        txtNome.addActionListener(this::txtNomeActionPerformed);
+        txtName.addActionListener(this::txtNameActionPerformed);
 
         btnCons.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCons.setText("PROXIMO");
         btnCons.addActionListener(this::btnConsActionPerformed);
 
-        spnNasc.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1769604803492L), new java.util.Date(-2208942032000L), new java.util.Date(1769604803492L), java.util.Calendar.DAY_OF_MONTH));
-        spnNasc.setEditor(new javax.swing.JSpinner.DateEditor(spnNasc, "dd/MM/yyyy"));
+        spnBirth.setModel(new javax.swing.SpinnerDateModel(new java.util.Date(1769604803492L), new java.util.Date(-2208942032000L), new java.util.Date(1769604803492L), java.util.Calendar.DAY_OF_MONTH));
+        spnBirth.setEditor(new javax.swing.JSpinner.DateEditor(spnBirth, "dd/MM/yyyy"));
 
         try {
             txtCpf.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("###.###.###-## ")));
@@ -111,10 +110,10 @@ public class Cadastro extends javax.swing.JFrame {
                         .addGap(67, 67, 67))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(txtNome)
+                            .addComponent(txtName)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
-                                .addComponent(spnNasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spnBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(140, 140, 140)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCons)
@@ -126,12 +125,12 @@ public class Cadastro extends javax.swing.JFrame {
                 .addGap(59, 59, 59)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNome)
-                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelNasc)
                     .addComponent(btnCons)
-                    .addComponent(spnNasc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spnBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
@@ -151,59 +150,59 @@ public class Cadastro extends javax.swing.JFrame {
         
         if (registrationDto == null) return;
     
-            RegistrationData registrationData = registrationDto.getRegistrationData();
+        RegistrationData registrationData = registrationDto.getRegistrationData();
 
-                if (registrationData.getNome() != null) txtNome.setText(registrationData.getNome());
-                    if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
-                        if (registrationData.getNascimento() != null) {
-                            
-                Date data = java.util.Date.from(registrationData.getNascimento()
+        if (registrationData.getName() != null) txtName.setText(registrationData.getName());
+        if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
+        if (registrationData.getBirth() != null) {              
+            Date data = java.util.Date.from(registrationData.getBirth()
                 .atStartOfDay(java.time.ZoneId.systemDefault())
-                .toInstant()
-        );
-        spnNasc.setValue(data);
-    }
+                .toInstant());
+
+            spnBirth.setValue(data);
+        }
     }
     
-    private void txtNomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNomeActionPerformed
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         
-    }//GEN-LAST:event_txtNomeActionPerformed
+    }//GEN-LAST:event_txtNameActionPerformed
     
     private void btnConsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsActionPerformed
         RegistrationData registrationData = registrationDto.getRegistrationData();
         
         if (registrationDto.getRegistrationAddress() == null) {
-        registrationDto.setRegistrationAddress(new RegistrationAddress());
-    }
+            registrationDto.setRegistrationAddress(new RegistrationAddress());
+        }
         
-        String nome = txtNome.getText();
+        String name = txtName.getText();
         String cpf = txtCpf.getText();
         
-                Date dataNasc = (java.util.Date) spnNasc.getValue();
-                    LocalDate nascimento = dataNasc.toInstant()
-                        .atZone(java.time.ZoneId.systemDefault())
-                        .toLocalDate();
+        Date dateBirth = (java.util.Date) spnBirth.getValue();
+        LocalDate birth = dateBirth.toInstant()
+        .atZone(java.time.ZoneId.systemDefault())
+        .toLocalDate();
         
-        registrationData.setNascimento(nascimento);
+        registrationData.setBirth(birth);
         
-                    SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                    String nascFormatada = sdf.format(dataNasc);
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        String formattedBirth = sdf.format(dateBirth);
         
-        registrationData.setNome(nome);
+        registrationData.setName(name);
         registrationData.setCpf(cpf);
-        registrationData.setNascimento(nascimento);
-        registrationData.setNascFormatada(nascFormatada);
+        registrationData.setBirth(birth);
+        registrationData.setFormattedBirth(formattedBirth);
         
-        java.util.List<String> erros = ValidatorAll.validateAll(registrationData);
+        List<String> erros = registrationData.validate();
+
         
         if (!erros.isEmpty()) {
             String msg = String.join("\n", erros);
             javax.swing.JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
             return;
         }
-        registrationData.setNome(txtNome.getText());
+        registrationData.setName(txtName.getText());
         registrationData.setCpf(txtCpf.getText());
-        registrationData.setNascFormatada(nascFormatada);
+        registrationData.setFormattedBirth(formattedBirth);
         
         Endereco telaEndereco = new Endereco (registrationDto);
         telaEndereco.setVisible(true);
@@ -228,8 +227,8 @@ public class Cadastro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelNome;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JSpinner spnNasc;
+    private javax.swing.JSpinner spnBirth;
     private javax.swing.JFormattedTextField txtCpf;
-    private javax.swing.JTextField txtNome;
+    private javax.swing.JTextField txtName;
     // End of variables declaration//GEN-END:variables
 }

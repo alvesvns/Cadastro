@@ -5,20 +5,20 @@ public class FinalTela extends javax.swing.JFrame{
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalTela.class.getName());
 
-     public FinalTela(RegistrationDTO registrationDto) { 
+    public FinalTela(RegistrationDTO registrationDto) { 
         initComponents();
         this.registrationDto = registrationDto;
                 
-            if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-            if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
+        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
     RegistrationData registrationData = this.registrationDto.getRegistrationData();
     RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
         
-            lblNome.setText("Nome: " + registrationData.getNome());
-            lblNascimento.setText("Nascimento: " + registrationData.getNascFormatada() + " - " + registrationData.getIdade() + " anos");
-            lblCpf.setText("CPF: " + registrationData.getCpf());
-            lblEndereco.setText("Endereço: " + registrationAddress.getRua() + ", " + registrationAddress.getBairro() + ", " 
+        lblNome.setText("Nome: " + registrationData.getName());
+        lblNascimento.setText("Nascimento: " + registrationData.getFormattedBirth() + " - " + registrationData.getAge() + " anos");
+        lblCpf.setText("CPF: " + registrationData.getCpf());
+        lblEndereco.setText("Endereço: " + registrationAddress.getRua() + ", " + registrationAddress.getBairro() + ", " 
             + registrationAddress.getCidade() + " - " + registrationAddress.getUf() + " - " + registrationAddress.getCep());
     }
 
@@ -113,11 +113,6 @@ public class FinalTela extends javax.swing.JFrame{
     this.dispose();        
     }//GEN-LAST:event_btnVoltar1ActionPerformed
 
-    
-    public static void main(String args[]) {
-        
-       
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFinalizar;
