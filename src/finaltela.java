@@ -18,8 +18,7 @@ public class FinalTela extends javax.swing.JFrame{
         lblNome.setText("Nome: " + registrationData.getName());
         lblNascimento.setText("Nascimento: " + registrationData.getFormattedBirth() + " - " + registrationData.getAge() + " anos");
         lblCpf.setText("CPF: " + registrationData.getCpf());
-        lblEndereco.setText("Endereço: " + registrationAddress.getRua() + ", " + registrationAddress.getBairro() + ", " 
-            + registrationAddress.getCidade() + " - " + registrationAddress.getUf() + " - " + registrationAddress.getCep());
+        lblEndereco.setText("Endereço: " + registrationAddress.getAddressText());
     }
 
     @SuppressWarnings("unchecked")

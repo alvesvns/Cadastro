@@ -73,14 +73,14 @@ public class RegistrationData {
     private List<String> validateCpf() {
         List<String> erros = new ArrayList<>();
 
-        if (isCpfInvalid(this.getCpf())) {
+        if (!isCpfValid(this.getCpf())) { // o "!" Antes vai servir para negação, então fica isCpfInvalid
             erros.add("- CPF inválido");
         }
 
         return erros;
     }
 
-    private boolean isCpfInvalid(String cpf) {
+    private boolean isCpfValid(String cpf) {
         if (cpf == null) return false;
 
         cpf = cpf.replaceAll("\\D", "");

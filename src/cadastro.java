@@ -7,8 +7,6 @@ import javax.swing.JOptionPane;
 public class Cadastro extends javax.swing.JFrame {
     private RegistrationDTO registrationDto;
     
-    
-
     public Cadastro() {
         initComponents();
         registrationDto = new RegistrationDTO();
