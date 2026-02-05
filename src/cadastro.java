@@ -14,7 +14,6 @@ public class Cadastro extends javax.swing.JFrame {
         registrationDto = new RegistrationDTO();
         registrationDto.setRegistrationData(new RegistrationData());
         registrationDto.setRegistrationAddress(new RegistrationAddress());
-        
     }
 
     public Cadastro(RegistrationDTO registrationDto) {
@@ -156,8 +155,7 @@ public class Cadastro extends javax.swing.JFrame {
         if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
         if (registrationData.getBirth() != null) {              
             Date data = java.util.Date.from(registrationData.getBirth()
-                .atStartOfDay(java.time.ZoneId.systemDefault())
-                    .toInstant());
+                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
             spnBirth.setValue(data);
         }
     }
@@ -178,8 +176,7 @@ public class Cadastro extends javax.swing.JFrame {
         
         Date dateBirth = (java.util.Date) spnBirth.getValue();
         LocalDate birth = dateBirth.toInstant()
-                .atZone(java.time.ZoneId.systemDefault())
-                .toLocalDate();
+            .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
         
         registrationData.setBirth(birth);
         
@@ -196,15 +193,15 @@ public class Cadastro extends javax.swing.JFrame {
         
         if (!erros.isEmpty()) {
             String msg = String.join("\n", erros);
-            javax.swing.JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
+            JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
             return;
         }
         registrationData.setName(txtName.getText());
         registrationData.setCpf(txtCpf.getText());
         registrationData.setFormattedBirth(formattedBirth);
         
-        Endereco telaEndereco = new Endereco (registrationDto);
-        telaEndereco.setVisible(true);
+        Endereco endereco = new Endereco (registrationDto);
+        endereco.setVisible(true);
         this.setVisible(false);
 
     }//GEN-LAST:event_btnConsActionPerformed

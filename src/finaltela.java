@@ -12,8 +12,8 @@ public class FinalTela extends javax.swing.JFrame{
         if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
         if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
-    RegistrationData registrationData = this.registrationDto.getRegistrationData();
-    RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
+        RegistrationData registrationData = this.registrationDto.getRegistrationData();
+        RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
         
         lblNome.setText("Nome: " + registrationData.getName());
         lblNascimento.setText("Nascimento: " + registrationData.getFormattedBirth() + " - " + registrationData.getAge() + " anos");
@@ -22,7 +22,6 @@ public class FinalTela extends javax.swing.JFrame{
             + registrationAddress.getCidade() + " - " + registrationAddress.getUf() + " - " + registrationAddress.getCep());
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -107,10 +106,9 @@ public class FinalTela extends javax.swing.JFrame{
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed
-   
-    Endereco telaEndereco = new Endereco(registrationDto);
-    telaEndereco.setVisible(true);
-    this.dispose();        
+        Endereco endereco = new Endereco(registrationDto);
+        endereco.setVisible(true);
+        this.dispose();        
     }//GEN-LAST:event_btnVoltar1ActionPerformed
 
 

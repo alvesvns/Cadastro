@@ -73,14 +73,14 @@ public class RegistrationData {
     private List<String> validateCpf() {
         List<String> erros = new ArrayList<>();
 
-        if (!isCpfValid(this.getCpf())) {
+        if (isCpfInvalid(this.getCpf())) {
             erros.add("- CPF inválido");
         }
 
         return erros;
     }
 
-    private boolean isCpfValid(String cpf) {
+    private boolean isCpfInvalid(String cpf) {
         if (cpf == null) return false;
 
         cpf = cpf.replaceAll("\\D", "");
@@ -103,6 +103,5 @@ public class RegistrationData {
 
         return dig1 == Character.getNumericValue(cpf.charAt(9)) && dig2 == Character.getNumericValue(cpf.charAt(10));
     }
-    
 }
 
