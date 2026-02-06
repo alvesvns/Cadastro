@@ -5,23 +5,25 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class Cadastro extends javax.swing.JFrame {
-    private RegistrationDTO registrationDto;
+    private RegistrationDto registrationDto;
+    private RegistrationList parentList;
     
     public Cadastro() {
         initComponents();
-        registrationDto = new RegistrationDTO();
+        this.parentList = null;
+        registrationDto = new RegistrationDto();
         registrationDto.setRegistrationData(new RegistrationData());
         registrationDto.setRegistrationAddress(new RegistrationAddress());
     }
 
-    public Cadastro(RegistrationDTO registrationDto) {
+    public Cadastro(RegistrationDto registrationDto, RegistrationList parentList) {
         initComponents();
-        
         this.registrationDto = registrationDto;
-
-        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
-
+        this.parentList = parentList;
+        if (this.registrationDto.getRegistrationData() == null) 
+            this.registrationDto.setRegistrationData(new RegistrationData());
+        if (this.registrationDto.getRegistrationAddress() == null) 
+            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
         setInfoForm();
     }
 
@@ -39,6 +41,7 @@ public class Cadastro extends javax.swing.JFrame {
         spnBirth = new javax.swing.JSpinner();
         canvas1 = new java.awt.Canvas();
         txtCpf = new javax.swing.JFormattedTextField();
+        btnVoltar = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -76,6 +79,9 @@ public class Cadastro extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         txtCpf.addActionListener(this::txtCpfActionPerformed);
+
+        btnVoltar.setText("VOLTAR");
+        btnVoltar.addActionListener(this::btnVoltarActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -115,6 +121,7 @@ public class Cadastro extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCons)
                         .addGap(17, 17, 17))))
+            .addComponent(btnVoltar)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,12 +135,14 @@ public class Cadastro extends javax.swing.JFrame {
                     .addComponent(jLabelNasc)
                     .addComponent(btnCons)
                     .addComponent(spnBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(19, 19, 19)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelCpf)
-                            .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnVoltar))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(142, 142, 142)
                         .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -143,6 +152,7 @@ public class Cadastro extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void setInfoForm() {
         
         if (registrationDto == null) return;
@@ -198,7 +208,7 @@ public class Cadastro extends javax.swing.JFrame {
         registrationData.setCpf(txtCpf.getText());
         registrationData.setFormattedBirth(formattedBirth);
         
-        Endereco endereco = new Endereco (registrationDto);
+        Endereco endereco = new Endereco (registrationDto, parentList);
         endereco.setVisible(true);
         this.setVisible(false);
 
@@ -207,14 +217,26 @@ public class Cadastro extends javax.swing.JFrame {
     private void txtCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCpfActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCpfActionPerformed
+
+    private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
+        if (parentList != null) {
+        parentList.setVisible(true);
+        } else {
+        new RegistrationList().setVisible(true);
+        }
+        this.dispose();
+    }//GEN-LAST:event_btnVoltarActionPerformed
   
         
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new Cadastro().setVisible(true));
     }
 
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCons;
+    private javax.swing.JButton btnVoltar;
     private java.awt.Canvas canvas1;
     private javax.swing.JLabel jLabelCpf;
     private javax.swing.JLabel jLabelNasc;

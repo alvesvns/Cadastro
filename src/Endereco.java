@@ -1,4 +1,3 @@
-
 import javax.swing.SwingWorker;
 import javax.swing.JOptionPane;
 import java.net.http.HttpClient;
@@ -13,14 +12,16 @@ import java.time.Duration;
 
 
 public class Endereco extends javax.swing.JFrame {
-    private RegistrationDTO registrationDto;
-    
+    private RegistrationDto registrationDto;
+    private RegistrationList parentList;
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
 
     public Endereco() {
         initComponents();
+        this.parentList = null;
 
-        this.registrationDto = new RegistrationDTO();
+        this.registrationDto = new RegistrationDto();
         this.registrationDto.setRegistrationData(new RegistrationData());
         this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
@@ -28,16 +29,24 @@ public class Endereco extends javax.swing.JFrame {
         setInfoForm();
     }
 
-    public Endereco(RegistrationDTO registrationDto) {
+    public Endereco(RegistrationDto registrationDto, RegistrationList parentList) {
         initComponents();
         this.registrationDto = registrationDto;
+        this.parentList = parentList;
 
-        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        if (this.registrationDto.getRegistrationData() == null) 
+            this.registrationDto.setRegistrationData(new RegistrationData());
+        if (this.registrationDto.getRegistrationAddress() == null) 
+            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
 
         setListUf();
         setInfoForm();
     }
+    
+    public Endereco(RegistrationDto registrationDto) {
+    this(registrationDto, null);
+    }
+
 
     private void setListUf() {
         cmbUf.setModel(new javax.swing.DefaultComboBoxModel<>(
@@ -246,7 +255,7 @@ public class Endereco extends javax.swing.JFrame {
         registrationAddress.setCidade(txtCidade.getText());
         registrationAddress.setUf(cmbUf.getSelectedItem().toString());
 
-        FinalTela telaFinal = new FinalTela(registrationDto);
+        FinalTela telaFinal = new FinalTela(registrationDto, parentList);
         telaFinal.setVisible(true);
         this.dispose();
 
@@ -261,7 +270,7 @@ public class Endereco extends javax.swing.JFrame {
         registrationAddress.setCidade(txtCidade.getText());
         registrationAddress.setUf(cmbUf.getSelectedItem().toString());
 
-        Cadastro cadastro = new Cadastro(registrationDto);
+        Cadastro cadastro = new Cadastro(registrationDto, parentList);
         cadastro.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
