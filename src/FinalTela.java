@@ -1,16 +1,22 @@
 
 public class FinalTela extends javax.swing.JFrame{
     
-    private RegistrationDTO registrationDto;
+    private RegistrationDto registrationDto;
+    private RegistrationList parentList;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(FinalTela.class.getName());
 
-    public FinalTela(RegistrationDTO registrationDto) { 
+    public FinalTela(RegistrationDto registrationDto, RegistrationList parentList) { 
         initComponents();
         this.registrationDto = registrationDto;
+        this.parentList = parentList;
                 
-        if (this.registrationDto.getRegistrationData() == null) this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        if (this.registrationDto.getRegistrationData() == null) {
+            this.registrationDto.setRegistrationData(new RegistrationData());
+        }
+        if (this.registrationDto.getRegistrationAddress() == null) {
+            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        }
 
         RegistrationData registrationData = this.registrationDto.getRegistrationData();
         RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
@@ -19,6 +25,10 @@ public class FinalTela extends javax.swing.JFrame{
         lblNascimento.setText("Nascimento: " + registrationData.getFormattedBirth() + " - " + registrationData.getAge() + " anos");
         lblCpf.setText("CPF: " + registrationData.getCpf());
         lblEndereco.setText("Endereço: " + registrationAddress.getAddressText());
+    }
+    
+    public FinalTela(RegistrationDto registrationDto) {
+        this(registrationDto, null);
     }
 
     @SuppressWarnings("unchecked")
@@ -101,11 +111,19 @@ public class FinalTela extends javax.swing.JFrame{
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalizarActionPerformed
-        this.dispose();
+        if (parentList != null){
+            parentList.updateTable();
+            parentList.setVisible(true);
+        } else {
+            RegistrationList registrationList = new RegistrationList();
+            registrationList.addRegistrations(registrationDto);
+            registrationList.setVisible(true);
+        }
+            this.dispose();
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed
-        Endereco endereco = new Endereco(registrationDto);
+        Endereco endereco = new Endereco(registrationDto, parentList);
         endereco.setVisible(true);
         this.dispose();        
     }//GEN-LAST:event_btnVoltar1ActionPerformed
