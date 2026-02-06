@@ -11,9 +11,9 @@ import java.time.Duration;
 
 
 
-public class Endereco extends javax.swing.JFrame {
-    private RegistrationDto registrationDto;
-    private RegistrationList parentList;
+    public class Endereco extends javax.swing.JFrame {
+        private RegistrationDto registrationDto;
+        private RegistrationList parentList;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
 
@@ -34,17 +34,19 @@ public class Endereco extends javax.swing.JFrame {
         this.registrationDto = registrationDto;
         this.parentList = parentList;
 
-        if (this.registrationDto.getRegistrationData() == null) 
+        if (this.registrationDto.getRegistrationData() == null) {
             this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) 
+        }
+        if (this.registrationDto.getRegistrationAddress() == null) {
             this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        }
 
         setListUf();
         setInfoForm();
     }
     
     public Endereco(RegistrationDto registrationDto) {
-    this(registrationDto, null);
+        this(registrationDto, null);
     }
 
 

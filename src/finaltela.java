@@ -11,10 +11,12 @@ public class FinalTela extends javax.swing.JFrame{
         this.registrationDto = registrationDto;
         this.parentList = parentList;
                 
-        if (this.registrationDto.getRegistrationData() == null) 
+        if (this.registrationDto.getRegistrationData() == null) {
             this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) 
+        }
+        if (this.registrationDto.getRegistrationAddress() == null) {
             this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        }
 
         RegistrationData registrationData = this.registrationDto.getRegistrationData();
         RegistrationAddress registrationAddress = this.registrationDto.getRegistrationAddress();
@@ -113,11 +115,11 @@ public class FinalTela extends javax.swing.JFrame{
             parentList.updateTable();
             parentList.setVisible(true);
         } else {
-        RegistrationList registrationList = new RegistrationList();
-        registrationList.addRegistrations(registrationDto);
-        registrationList.setVisible(true);
+            RegistrationList registrationList = new RegistrationList();
+            registrationList.addRegistrations(registrationDto);
+            registrationList.setVisible(true);
         }
-        this.dispose();
+            this.dispose();
     }//GEN-LAST:event_btnFinalizarActionPerformed
 
     private void btnVoltar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltar1ActionPerformed

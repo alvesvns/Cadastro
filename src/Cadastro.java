@@ -20,10 +20,14 @@ public class Cadastro extends javax.swing.JFrame {
         initComponents();
         this.registrationDto = registrationDto;
         this.parentList = parentList;
-        if (this.registrationDto.getRegistrationData() == null) 
+        
+        if (this.registrationDto.getRegistrationData() == null) {
             this.registrationDto.setRegistrationData(new RegistrationData());
-        if (this.registrationDto.getRegistrationAddress() == null) 
+        }
+        if (this.registrationDto.getRegistrationAddress() == null) {
             this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        }
+        
         setInfoForm();
     }
 
@@ -220,14 +224,13 @@ public class Cadastro extends javax.swing.JFrame {
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         if (parentList != null) {
-        parentList.setVisible(true);
-        } else {
-        new RegistrationList().setVisible(true);
-        }
-        this.dispose();
+            parentList.setVisible(true);
+            } else {
+                new RegistrationList().setVisible(true);
+            }
+            this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
   
-        
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(() -> new Cadastro().setVisible(true));
     }
