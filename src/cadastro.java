@@ -225,10 +225,10 @@ public class Cadastro extends javax.swing.JFrame {
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
         if (parentList != null) {
             parentList.setVisible(true);
-            } else {
-                new RegistrationList().setVisible(true);
-            }
-            this.dispose();
+        } else {
+            new RegistrationList().setVisible(true);
+        }
+        this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
   
     public static void main(String args[]) {
