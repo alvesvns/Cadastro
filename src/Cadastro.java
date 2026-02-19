@@ -165,10 +165,8 @@ public class Cadastro extends javax.swing.JFrame {
 
         if (registrationData.getName() != null) txtName.setText(registrationData.getName());
         if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
-        if (registrationData.getBirth() != null) {              
-            Date data = java.util.Date.from(registrationData.getBirth()
-                .atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
-            spnBirth.setValue(data);
+        if (registrationData.getBirth() != null) {
+        spnBirth.setValue(java.sql.Date.valueOf(registrationData.getBirth())); 
         }
     }
     
@@ -208,6 +206,29 @@ public class Cadastro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Dados inválidos:\n\n" + msg);
             return;
         }
+        
+        try {
+            PersonDao dao = new PersonDao();
+
+            Integer id = registrationData.getId();
+
+            if (id == null || id == 0) {
+                if (dao.existsByCpf(cpf)) {
+                    JOptionPane.showMessageDialog(this, "CPF já cadastrado!");
+                    return;
+                }
+            } else {
+                if (dao.existsByCpfAndNotId(cpf, id)) {
+                    JOptionPane.showMessageDialog(this, "CPF já cadastrado em outro cadastro!");
+                    return;
+                }
+            }
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, "Erro ao verificar CPF: " + erro.getMessage());
+            return;
+        }
+
         registrationData.setName(txtName.getText());
         registrationData.setCpf(txtCpf.getText());
         registrationData.setFormattedBirth(formattedBirth);

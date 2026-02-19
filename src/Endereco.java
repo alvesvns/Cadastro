@@ -280,6 +280,24 @@ import javax.swing.JDialog;
         registrationAddress.setBairro(txtBairro.getText());
         registrationAddress.setCidade(txtCidade.getText());
         registrationAddress.setUf(cmbUf.getSelectedItem().toString());
+        
+        try {
+            PersonDao dao = new PersonDao();
+
+            Integer id = registrationDto.getRegistrationData().getId();
+
+            if (id != null && id > 0) {
+                dao.update(registrationDto);
+                JOptionPane.showMessageDialog(this, "Editado com sucesso!");
+            } else {
+                dao.save(registrationDto);
+                JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
+            }
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar: " + erro.getMessage());
+            erro.printStackTrace();
+            return;
+        }
 
         FinalTela telaFinal = new FinalTela(registrationDto, parentList);
         telaFinal.setVisible(true);

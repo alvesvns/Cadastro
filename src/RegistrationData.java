@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class RegistrationData {
- 
+    private Integer id;
     private String name;
     private String cpf;
     private String formattedBirth;

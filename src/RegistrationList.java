@@ -11,7 +11,7 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 public class RegistrationList extends javax.swing.JFrame {
-    private static final List<RegistrationDto> registrations = new ArrayList<>();
+    // private static final List<RegistrationDto> registrations = new ArrayList<>();
     private DefaultTableModel model;
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistrationList.class.getName());
@@ -36,30 +36,39 @@ public class RegistrationList extends javax.swing.JFrame {
     }
     
     public void addRegistrations(RegistrationDto registrationDto) {
-        registrations.add(registrationDto);
-        updateTable();
-        updateEmptyMessage();
     }
     
     public void updateTable(){
         model.setRowCount(0);
         
-        for (RegistrationDto registrationDto : registrations) {
-            RegistrationData registrationData = registrationDto.getRegistrationData();
-            RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
+        try {
+            PersonDao personDao = new PersonDao();
+            List<RegistrationDto> list = personDao.findAll();
+        
+            for (RegistrationDto registrationDto : list) {
+                RegistrationData registrationData = registrationDto.getRegistrationData();
+                RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
             
-            model.addRow(new Object[]{
-                registrationData.getName(),
-                registrationData.getFormattedBirth(),
-                registrationData.getCpf(),
-                registrationAddress.getRua(),
-                registrationAddress.getBairro(),
-                registrationAddress.getCidade(),
-                registrationAddress.getUf(),
-                registrationAddress.getCep(),
-                "Editar",
-                "Excluir"    
-            });
+                model.addRow(new Object[]{
+                    registrationData.getId(),
+                    registrationData.getName(),
+                    registrationData.getBirth(),
+                    registrationData.getCpf(),
+                    registrationAddress.getRua(),
+                    registrationAddress.getBairro(),
+                    registrationAddress.getCidade(),
+                    registrationAddress.getUf(),
+                    registrationAddress.getCep(),
+                    "Editar",
+                    "Excluir"
+                });
+            }
+        
+            updateEmptyMessage();
+        
+        } catch (Exception erro) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar: " + erro.getMessage());
+            erro.printStackTrace();
         }
     }
 
@@ -87,17 +96,17 @@ public class RegistrationList extends javax.swing.JFrame {
 
         tblCadastro.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nome", "Nascimento", "CPF", "Rua", "Bairro", "Cidade", "UF", "CEP", "", ""
+                "Matricula", "Nome", "Nascimento", "CPF", "Rua", "Bairro", "Cidade", "UF", "CEP", "", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, false, true, true
+                false, false, false, false, false, false, false, false, false, true, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -146,21 +155,43 @@ public class RegistrationList extends javax.swing.JFrame {
 
     private void onEdit(int row) {
         int modelRow = tblCadastro.convertRowIndexToModel(row);
-        RegistrationDto registrationDto = registrations.get(modelRow);
-        
-        Cadastro cadastro = new Cadastro(registrationDto, this); 
-        cadastro.setVisible(true);
-        this.setVisible(false);
-}
+
+        int id = Integer.parseInt(model.getValueAt(modelRow, 0).toString());
+
+        try {
+            PersonDao personDao = new PersonDao();
+            RegistrationDto registrationDto = personDao.findById(id);
+
+            Cadastro cadastro = new Cadastro(registrationDto, this);
+            cadastro.setVisible(true);
+            this.setVisible(false);
+
+        } catch (Exception erro) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao editar: " + erro.getMessage());
+            erro.printStackTrace();
+        }
+    }
 
     private void onDelete(int row) {
-        int modelRow = tblCadastro.convertRowIndexToModel(row);
-        registrations.remove(modelRow);
-        updateTable();
-        updateEmptyMessage();
-}
+        try {
+            int modelRow = tblCadastro.convertRowIndexToModel(row);
+
+            Object idObj = model.getValueAt(modelRow, 0);
+            int id = Integer.parseInt(idObj.toString());
+
+            PersonDao personDao = new PersonDao();
+            personDao.deleteById(id);
+
+            updateTable();
+            updateEmptyMessage();
+        } catch (Exception erro) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao excluir: " + erro.getMessage());
+            erro.printStackTrace();
+        }
+    }
+    
     private void updateEmptyMessage(){
-        boolean vazio = registrations.isEmpty();
+        boolean vazio = (model.getRowCount() == 0);
         lblText.setVisible(vazio);
         lblText1.setVisible(vazio);
         tblCadastro.setVisible(!vazio);
