@@ -20,6 +20,7 @@ public class RegistrationList extends javax.swing.JFrame {
         initComponents();
         model = (DefaultTableModel) tblCadastro.getModel(); 
         updateTable();
+        updateEmptyMessage();
         
         int colEdit = tblCadastro.getColumnCount() - 2;
         int colDelete = tblCadastro.getColumnCount() - 1;
@@ -37,6 +38,7 @@ public class RegistrationList extends javax.swing.JFrame {
     public void addRegistrations(RegistrationDto registrationDto) {
         registrations.add(registrationDto);
         updateTable();
+        updateEmptyMessage();
     }
     
     public void updateTable(){
@@ -65,12 +67,23 @@ public class RegistrationList extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        scrollPane1 = new java.awt.ScrollPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tblCadastro = new javax.swing.JTable();
         btnNovo = new javax.swing.JButton();
+        lblText = new javax.swing.JLabel();
+        lblText1 = new javax.swing.JLabel();
+        jScrollPane9 = new javax.swing.JScrollPane();
+        tblCadastro = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        btnNovo.setText("NOVO CADASTRO");
+        btnNovo.addActionListener(this::btnNovoActionPerformed);
+
+        lblText.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        lblText.setText("NENHUM CADASTRO ENCONTRADO");
+        lblText.setToolTipText("");
+
+        lblText1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        lblText1.setText("CLIQUE EM \"NOVO CADASTRO\" PARA COMEÇAR");
 
         tblCadastro.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -80,7 +93,7 @@ public class RegistrationList extends javax.swing.JFrame {
                 {null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Nome", "Nascimento", "Cpf", "Rua", "Bairro", "Cidade", "UF", "CEP", "", ""
+                "Nome", "Nascimento", "CPF", "Rua", "Bairro", "Cidade", "UF", "CEP", "", ""
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -91,31 +104,41 @@ public class RegistrationList extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblCadastro);
-
-        scrollPane1.add(jScrollPane1);
-
-        btnNovo.setText("NOVO CADASTRO");
-        btnNovo.addActionListener(this::btnNovoActionPerformed);
+        jScrollPane9.setViewportView(tblCadastro);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(1010, Short.MAX_VALUE)
-                .addComponent(btnNovo)
-                .addGap(18, 18, 18))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnNovo)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblText)
+                        .addGap(413, 413, 413))))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 1085, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(382, 382, 382)
+                .addComponent(lblText1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(16, 16, 16)
+                .addGap(20, 20, 20)
                 .addComponent(btnNovo)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 341, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addComponent(lblText, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblText1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -134,8 +157,14 @@ public class RegistrationList extends javax.swing.JFrame {
         int modelRow = tblCadastro.convertRowIndexToModel(row);
         registrations.remove(modelRow);
         updateTable();
+        updateEmptyMessage();
 }
- 
+    private void updateEmptyMessage(){
+        boolean vazio = registrations.isEmpty();
+        lblText.setVisible(vazio);
+        lblText1.setVisible(vazio);
+        tblCadastro.setVisible(!vazio);
+    }
     
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         Cadastro cadastro = new Cadastro();
@@ -188,8 +217,9 @@ public class RegistrationList extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnNovo;
-    private javax.swing.JScrollPane jScrollPane1;
-    private java.awt.ScrollPane scrollPane1;
+    private javax.swing.JScrollPane jScrollPane9;
+    private javax.swing.JLabel lblText;
+    private javax.swing.JLabel lblText1;
     private javax.swing.JTable tblCadastro;
     // End of variables declaration//GEN-END:variables
 }

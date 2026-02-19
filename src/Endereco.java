@@ -8,12 +8,15 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.net.SocketTimeoutException;
 import java.time.Duration;
+import javax.swing.JDialog;
+
 
 
 
     public class Endereco extends javax.swing.JFrame {
         private RegistrationDto registrationDto;
         private RegistrationList parentList;
+        private JDialog loadingDialog;
 
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
 
@@ -198,6 +201,27 @@ import java.time.Duration;
             cmbUf.setSelectedIndex(0);
         }
     }
+    
+    private void showLoading(){
+        JOptionPane optionPane = new JOptionPane(
+        "Buscando CEP...",
+        JOptionPane.INFORMATION_MESSAGE,
+        JOptionPane.DEFAULT_OPTION,
+        null,
+        new Object[]{},
+        null
+        );
+        
+        loadingDialog = optionPane.createDialog(this, "Aguarde");
+        loadingDialog.setModal(false);
+        loadingDialog.setVisible(true);
+    }
+    
+    private void hideLoading(){
+        if (loadingDialog != null){
+            loadingDialog.dispose();
+        }
+    }
 
     private void txtCepActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCepActionPerformed
         
@@ -282,6 +306,8 @@ import java.time.Duration;
         txtBairro.setText("");
         txtCidade.setText("");
         cmbUf.setSelectedIndex(0);
+        
+        showLoading();
 
         new SwingWorker<String, Void>() {
             @Override
@@ -308,8 +334,13 @@ import java.time.Duration;
 
             @Override
             protected void done() {
+                hideLoading();
                 try {
                     String json = get();
+                    if (json.isEmpty()){
+                        JOptionPane.showMessageDialog(Endereco.this,
+                                "Aguarde, buscando o CEP");
+                    }
 
                     if (json == null) {
                         JOptionPane.showMessageDialog(Endereco.this,
@@ -351,7 +382,7 @@ import java.time.Duration;
 
         return json.substring(inicio, fim);
     }
-
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCadastrar;
