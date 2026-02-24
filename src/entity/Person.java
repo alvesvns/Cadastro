@@ -1,3 +1,5 @@
+package entity;
+
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
@@ -8,13 +10,14 @@ import java.util.List;
 
 @Getter
 @Setter
-public class RegistrationData {
+public class Person {
     private Integer id;
     private String name;
     private String cpf;
     private String formattedBirth;
     private int age;
     private LocalDate birth;
+    private Integer addressId;
     
     public List<String> validate() {
         List<String> erros = new ArrayList<>();
@@ -102,6 +105,14 @@ public class RegistrationData {
         if (dig2 >= 10) dig2 = 0;
 
         return dig1 == Character.getNumericValue(cpf.charAt(9)) && dig2 == Character.getNumericValue(cpf.charAt(10));
+    }
+    
+    public boolean isInsert() {
+        return id == null || id == 0;
+    }
+
+    public boolean isEdit() {
+        return !isInsert();
     }
 }
 

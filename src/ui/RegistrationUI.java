@@ -1,3 +1,9 @@
+package ui;
+
+import dao.AddressDao;
+import dao.PersonDao;
+import entity.Address;
+import entity.Person;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -6,17 +12,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-public class RegistrationList extends javax.swing.JFrame {
-    // private static final List<RegistrationDto> registrations = new ArrayList<>();
+public class RegistrationUI extends javax.swing.JFrame {
+  
     private DefaultTableModel model;
+    private final PersonDao personDao = new PersonDao();
+    private final AddressDao addressDao = new AddressDao();
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistrationList.class.getName());
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistrationUI.class.getName());
 
-    public RegistrationList() {
+    public RegistrationUI() {
         initComponents();
         model = (DefaultTableModel) tblCadastro.getModel(); 
         updateTable();
@@ -35,42 +44,41 @@ public class RegistrationList extends javax.swing.JFrame {
         tblCadastro.getColumnModel().getColumn(colDelete).setPreferredWidth(70);
     }
     
-    public void addRegistrations(RegistrationDto registrationDto) {
-    }
-    
-    public void updateTable(){
-        model.setRowCount(0);
-        
-        try {
-            PersonDao personDao = new PersonDao();
-            List<RegistrationDto> list = personDao.findAll();
-        
-            for (RegistrationDto registrationDto : list) {
-                RegistrationData registrationData = registrationDto.getRegistrationData();
-                RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
-            
-                model.addRow(new Object[]{
-                    registrationData.getId(),
-                    registrationData.getName(),
-                    registrationData.getBirth(),
-                    registrationData.getCpf(),
-                    registrationAddress.getRua(),
-                    registrationAddress.getBairro(),
-                    registrationAddress.getCidade(),
-                    registrationAddress.getUf(),
-                    registrationAddress.getCep(),
-                    "Editar",
-                    "Excluir"
-                });
+    public void updateTable() {
+    model.setRowCount(0);
+
+    try {
+        List<Person> pessoas = personDao.findAll();
+
+        for (Person person : pessoas) {
+            Address address = null;
+
+            if (person.getAddressId() != null) {
+                address = addressDao.findById(person.getAddressId());
             }
-        
-            updateEmptyMessage();
-        
-        } catch (Exception erro) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao carregar: " + erro.getMessage());
-            erro.printStackTrace();
+
+            model.addRow(new Object[] {
+                person.getId(),
+                person.getName(),
+                person.getBirth(),
+                person.getCpf(),
+                (address != null ? address.getRua() : ""),
+                (address != null ? address.getBairro() : ""),
+                (address != null ? address.getCidade() : ""),
+                (address != null ? address.getUf() : ""),
+                (address != null ? address.getCep() : ""),
+                "Editar",
+                "Excluir"
+            });
         }
+
+        updateEmptyMessage();
+
+    } catch (Exception erro) {
+        JOptionPane.showMessageDialog(this, "Erro ao carregar: " + erro.getMessage());
+        erro.printStackTrace();
     }
+}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -119,20 +127,20 @@ public class RegistrationList extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane9)
+                .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(403, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnNovo)
                         .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblText)
-                        .addGap(413, 413, 413))))
+                        .addGap(399, 399, 399))))
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 1085, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(382, 382, 382)
+                .addGap(420, 420, 420)
                 .addComponent(lblText1)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -142,12 +150,12 @@ public class RegistrationList extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addComponent(btnNovo)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 317, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane9, javax.swing.GroupLayout.PREFERRED_SIZE, 372, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
                 .addComponent(lblText, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblText1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(62, 62, 62))
         );
 
         pack();
@@ -155,19 +163,22 @@ public class RegistrationList extends javax.swing.JFrame {
 
     private void onEdit(int row) {
         int modelRow = tblCadastro.convertRowIndexToModel(row);
-
         int id = Integer.parseInt(model.getValueAt(modelRow, 0).toString());
 
         try {
-            PersonDao personDao = new PersonDao();
-            RegistrationDto registrationDto = personDao.findById(id);
+            Person person = personDao.findById(id);
 
-            Cadastro cadastro = new Cadastro(registrationDto, this);
-            cadastro.setVisible(true);
-            this.setVisible(false);
+            Address address = null;
+            if (person != null && person.getAddressId() != null) {
+                address = addressDao.findById(person.getAddressId());
+            }
+
+        CadastroUI cadastro = new CadastroUI(person, address, this);
+        cadastro.setVisible(true);
+        this.setVisible(false);
 
         } catch (Exception erro) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao editar: " + erro.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao editar: " + erro.getMessage());
             erro.printStackTrace();
         }
     }
@@ -175,17 +186,15 @@ public class RegistrationList extends javax.swing.JFrame {
     private void onDelete(int row) {
         try {
             int modelRow = tblCadastro.convertRowIndexToModel(row);
+            int id = Integer.parseInt(model.getValueAt(modelRow, 0).toString());
 
-            Object idObj = model.getValueAt(modelRow, 0);
-            int id = Integer.parseInt(idObj.toString());
-
-            PersonDao personDao = new PersonDao();
             personDao.deleteById(id);
 
             updateTable();
             updateEmptyMessage();
+
         } catch (Exception erro) {
-            javax.swing.JOptionPane.showMessageDialog(this, "Erro ao excluir: " + erro.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao excluir: " + erro.getMessage());
             erro.printStackTrace();
         }
     }
@@ -198,13 +207,13 @@ public class RegistrationList extends javax.swing.JFrame {
     }
     
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
-        Cadastro cadastro = new Cadastro();
+        CadastroUI cadastro = new CadastroUI();
         cadastro.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
     public static void main(String args[]) {
 
-        java.awt.EventQueue.invokeLater(() -> new RegistrationList().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new RegistrationUI().setVisible(true));
     }
     class ButtonRenderer extends JButton implements TableCellRenderer {
     public ButtonRenderer() { setOpaque(true); }

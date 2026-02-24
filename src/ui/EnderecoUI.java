@@ -1,3 +1,9 @@
+package ui;
+
+import dao.PersonDao;
+import entity.Address;
+import entity.Person;
+import service.PersonService;
 import javax.swing.SwingWorker;
 import javax.swing.JOptionPane;
 import java.net.http.HttpClient;
@@ -13,45 +19,40 @@ import javax.swing.JDialog;
 
 
 
-    public class Endereco extends javax.swing.JFrame {
-        private RegistrationDto registrationDto;
-        private RegistrationList parentList;
+    public class EnderecoUI extends javax.swing.JFrame {
+        private Person person;
+        private Address address;
+        private RegistrationUI parentList;
         private JDialog loadingDialog;
 
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Endereco.class.getName());
-
-    public Endereco() {
+    public EnderecoUI() {
         initComponents();
         this.parentList = null;
-
-        this.registrationDto = new RegistrationDto();
-        this.registrationDto.setRegistrationData(new RegistrationData());
-        this.registrationDto.setRegistrationAddress(new RegistrationAddress());
+        this.person = new Person();
+        this.address = new Address();
 
         setListUf();
         setInfoForm();
     }
 
-    public Endereco(RegistrationDto registrationDto, RegistrationList parentList) {
+    public EnderecoUI(Person person, Address address, RegistrationUI parentList) {
         initComponents();
-        this.registrationDto = registrationDto;
-        this.parentList = parentList;
 
-        if (this.registrationDto.getRegistrationData() == null) {
-            this.registrationDto.setRegistrationData(new RegistrationData());
-        }
-        if (this.registrationDto.getRegistrationAddress() == null) {
-            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
-        }
+        this.person = (person != null) ? person : new Person();
+        this.address = (address != null) ? address : new Address();
+        this.parentList = parentList;
 
         setListUf();
         setInfoForm();
     }
     
-    public Endereco(RegistrationDto registrationDto) {
-        this(registrationDto, null);
+    public EnderecoUI(Person person, Address address) {
+        this(person, address, null);
     }
-
+    
+    public EnderecoUI(Person person, RegistrationUI parentList) {
+        this(person, new Address(), parentList);
+    }
 
     private void setListUf() {
         cmbUf.setModel(new javax.swing.DefaultComboBoxModel<>(
@@ -187,16 +188,15 @@ import javax.swing.JDialog;
     }// </editor-fold>//GEN-END:initComponents
 
     private void setInfoForm() {
-        
-        RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
-        if (registrationAddress == null) return;
-        if (registrationAddress.getCep() != null) txtCep.setText(registrationAddress.getCep());
-        if (registrationAddress.getRua() != null) txtRua.setText(registrationAddress.getRua());
-        if (registrationAddress.getBairro() != null) txtBairro.setText(registrationAddress.getBairro());
-        if (registrationAddress.getCidade() != null) txtCidade.setText(registrationAddress.getCidade());
+        if (address == null) return;
 
-        if (registrationAddress.getUf() != null && !registrationAddress.getUf().isBlank()) {
-            cmbUf.setSelectedItem(registrationAddress.getUf());
+        if (address.getCep() != null) txtCep.setText(address.getCep());
+        if (address.getRua() != null) txtRua.setText(address.getRua());
+        if (address.getBairro() != null) txtBairro.setText(address.getBairro());
+        if (address.getCidade() != null) txtCidade.setText(address.getCidade());
+
+        if (address.getUf() != null && !address.getUf().isBlank()) {
+            cmbUf.setSelectedItem(address.getUf());
         } else {
             cmbUf.setSelectedIndex(0);
         }
@@ -244,11 +244,8 @@ import javax.swing.JDialog;
 
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         
-        RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
-        if (registrationAddress == null) {
-            registrationDto.setRegistrationAddress(new RegistrationAddress());
-            registrationAddress = registrationDto.getRegistrationAddress();
-        }
+        if (person == null) person = new Person();
+        if (address == null) address = new Address();
         
         String cep = txtCep.getText();
         String rua = txtRua.getText();
@@ -275,46 +272,55 @@ import javax.swing.JDialog;
             cmbUf.requestFocus();
             return;
         }
-        registrationAddress.setCep(txtCep.getText());
-        registrationAddress.setRua(txtRua.getText());
-        registrationAddress.setBairro(txtBairro.getText());
-        registrationAddress.setCidade(txtCidade.getText());
-        registrationAddress.setUf(cmbUf.getSelectedItem().toString());
+        address.setCep(txtCep.getText());
+        address.setRua(txtRua.getText());
+        address.setBairro(txtBairro.getText());
+        address.setCidade(txtCidade.getText());
+        address.setUf(uf);
         
         try {
-            PersonDao dao = new PersonDao();
-
-            Integer id = registrationDto.getRegistrationData().getId();
-
-            if (id != null && id > 0) {
-                dao.update(registrationDto);
-                JOptionPane.showMessageDialog(this, "Editado com sucesso!");
-            } else {
-                dao.save(registrationDto);
+            PersonService personService = new PersonService();
+            if (person.getId() != null) {            // se está editando
+                address.setId(person.getAddressId()); // mantém o mesmo endereço no update
+}
+            personService.save(person, address);
+            
+            if (person.getId() == null || person.getId() == 0) {
                 JOptionPane.showMessageDialog(this, "Salvo com sucesso!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Editado com sucesso!");
             }
+
         } catch (Exception erro) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar: " + erro.getMessage());
             erro.printStackTrace();
             return;
         }
 
-        FinalTela telaFinal = new FinalTela(registrationDto, parentList);
-        telaFinal.setVisible(true);
-        this.dispose();
+        if (parentList != null){
+            parentList.updateTable();
+            parentList.setVisible(true);
+        } else {
+            RegistrationUI registrationList = new RegistrationUI();
+            registrationList.setVisible(true);
+        }
+            this.dispose();
 
     }//GEN-LAST:event_btnCadastrarActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
-        RegistrationAddress registrationAddress = registrationDto.getRegistrationAddress();
-    
-        registrationAddress.setCep(txtCep.getText());
-        registrationAddress.setRua(txtRua.getText());
-        registrationAddress.setBairro(txtBairro.getText());
-        registrationAddress.setCidade(txtCidade.getText());
-        registrationAddress.setUf(cmbUf.getSelectedItem().toString());
 
-        Cadastro cadastro = new Cadastro(registrationDto, parentList);
+        if (address == null) address = new Address();
+        address.setCep(txtCep.getText());
+        address.setRua(txtRua.getText());
+        address.setBairro(txtBairro.getText());
+        address.setCidade(txtCidade.getText());
+
+        if (cmbUf.getSelectedIndex() != 0) {
+            address.setUf(cmbUf.getSelectedItem().toString());
+        }
+
+        CadastroUI cadastro = new CadastroUI(person, address, parentList);
         cadastro.setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
@@ -356,24 +362,24 @@ import javax.swing.JDialog;
                 try {
                     String json = get();
                     if (json.isEmpty()){
-                        JOptionPane.showMessageDialog(Endereco.this,
+                        JOptionPane.showMessageDialog(EnderecoUI.this,
                                 "Aguarde, buscando o CEP");
                     }
 
                     if (json == null) {
-                        JOptionPane.showMessageDialog(Endereco.this,
+                        JOptionPane.showMessageDialog(EnderecoUI.this,
                             "Sem internet. Verifique sua conexão e tente novamente.");
                         return;
                     }
 
                     if ("ERRO".equals(json)) {
-                        JOptionPane.showMessageDialog(Endereco.this,
+                        JOptionPane.showMessageDialog(EnderecoUI.this,
                             "Erro ao buscar CEP.");
                         return;
                     }
 
                     if (json.contains("\"erro\": true")) {
-                        JOptionPane.showMessageDialog(Endereco.this, "CEP não encontrado");
+                        JOptionPane.showMessageDialog(EnderecoUI.this, "CEP não encontrado");
                         return;
                     }
 
@@ -383,7 +389,7 @@ import javax.swing.JDialog;
                     cmbUf.setSelectedItem(getValue(json, "uf"));
 
                 } catch (Exception registrationAddress) {
-                JOptionPane.showMessageDialog(Endereco.this, "Erro ao buscar CEP.");
+                JOptionPane.showMessageDialog(EnderecoUI.this, "Erro ao buscar CEP.");
                 }
             }
         }.execute();

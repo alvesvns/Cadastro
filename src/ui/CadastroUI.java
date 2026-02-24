@@ -1,32 +1,34 @@
+package ui;
+
+import dao.PersonDao;
+import entity.Address;
+import entity.Person;
 import java.time.LocalDate;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 
-public class Cadastro extends javax.swing.JFrame {
-    private RegistrationDto registrationDto;
-    private RegistrationList parentList;
+public class CadastroUI extends javax.swing.JFrame {
+    private Person person;
+    private Address address;
+    private RegistrationUI parentList;
     
-    public Cadastro() {
+    public CadastroUI() {
         initComponents();
         this.parentList = null;
-        registrationDto = new RegistrationDto();
-        registrationDto.setRegistrationData(new RegistrationData());
-        registrationDto.setRegistrationAddress(new RegistrationAddress());
+        this.person = new Person();
+        this.address = new Address();
     }
 
-    public Cadastro(RegistrationDto registrationDto, RegistrationList parentList) {
+    public CadastroUI(Person person, Address address, RegistrationUI parentList) {
         initComponents();
-        this.registrationDto = registrationDto;
+        this.person = person;
+        this.address = address;
         this.parentList = parentList;
         
-        if (this.registrationDto.getRegistrationData() == null) {
-            this.registrationDto.setRegistrationData(new RegistrationData());
-        }
-        if (this.registrationDto.getRegistrationAddress() == null) {
-            this.registrationDto.setRegistrationAddress(new RegistrationAddress());
-        }
+        if (this.person == null) this.person = new Person();
+        if (this.address == null) this.address = new Address();
         
         setInfoForm();
     }
@@ -159,14 +161,12 @@ public class Cadastro extends javax.swing.JFrame {
     
     private void setInfoForm() {
         
-        if (registrationDto == null) return;
-    
-        RegistrationData registrationData = registrationDto.getRegistrationData();
+        if (person == null) return;
 
-        if (registrationData.getName() != null) txtName.setText(registrationData.getName());
-        if (registrationData.getCpf() != null) txtCpf.setText(registrationData.getCpf()); 
-        if (registrationData.getBirth() != null) {
-        spnBirth.setValue(java.sql.Date.valueOf(registrationData.getBirth())); 
+        if (person.getName() != null) txtName.setText(person.getName());
+        if (person.getCpf() != null) txtCpf.setText(person.getCpf()); 
+        if (person.getBirth() != null) {
+        spnBirth.setValue(java.sql.Date.valueOf(person.getBirth())); 
         }
     }
     
@@ -175,30 +175,25 @@ public class Cadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameActionPerformed
     
     private void btnConsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsActionPerformed
-        RegistrationData registrationData = registrationDto.getRegistrationData();
-        
-        if (registrationDto.getRegistrationAddress() == null) {
-            registrationDto.setRegistrationAddress(new RegistrationAddress());
-        }
-        
+
         String name = txtName.getText();
         String cpf = txtCpf.getText();
         
-        Date dateBirth = (java.util.Date) spnBirth.getValue();
+        Date dateBirth = (Date) spnBirth.getValue();
         LocalDate birth = dateBirth.toInstant()
             .atZone(java.time.ZoneId.systemDefault()).toLocalDate();
         
-        registrationData.setBirth(birth);
+        person.setBirth(birth);
         
         SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
         String formattedBirth = sdf.format(dateBirth);
         
-        registrationData.setName(name);
-        registrationData.setCpf(cpf);
-        registrationData.setBirth(birth);
-        registrationData.setFormattedBirth(formattedBirth);
+        person.setName(name);
+        person.setCpf(cpf);
+        person.setBirth(birth);
+        person.setFormattedBirth(formattedBirth);
         
-        List<String> erros = registrationData.validate();
+        List<String> erros = person.validate();
 
         
         if (!erros.isEmpty()) {
@@ -208,17 +203,17 @@ public class Cadastro extends javax.swing.JFrame {
         }
         
         try {
-            PersonDao dao = new PersonDao();
+            PersonDao personDao = new PersonDao();
 
-            Integer id = registrationData.getId();
+            Integer id = person.getId();
 
-            if (id == null || id == 0) {
-                if (dao.existsByCpf(cpf)) {
+            if (person.isInsert()) {
+                if (personDao.existsByCpf(cpf)) {
                     JOptionPane.showMessageDialog(this, "CPF já cadastrado!");
                     return;
                 }
             } else {
-                if (dao.existsByCpfAndNotId(cpf, id)) {
+                if (personDao.existsByCpfAndNotId(cpf, id)) {
                     JOptionPane.showMessageDialog(this, "CPF já cadastrado em outro cadastro!");
                     return;
                 }
@@ -228,12 +223,8 @@ public class Cadastro extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao verificar CPF: " + erro.getMessage());
             return;
         }
-
-        registrationData.setName(txtName.getText());
-        registrationData.setCpf(txtCpf.getText());
-        registrationData.setFormattedBirth(formattedBirth);
         
-        Endereco endereco = new Endereco (registrationDto, parentList);
+        EnderecoUI endereco = new EnderecoUI (person, parentList);
         endereco.setVisible(true);
         this.setVisible(false);
 
@@ -247,13 +238,13 @@ public class Cadastro extends javax.swing.JFrame {
         if (parentList != null) {
             parentList.setVisible(true);
         } else {
-            new RegistrationList().setVisible(true);
+            new RegistrationUI().setVisible(true);
         }
         this.dispose();
     }//GEN-LAST:event_btnVoltarActionPerformed
   
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(() -> new Cadastro().setVisible(true));
+        java.awt.EventQueue.invokeLater(() -> new CadastroUI().setVisible(true));
     }
 
 
