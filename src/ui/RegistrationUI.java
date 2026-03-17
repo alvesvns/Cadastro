@@ -168,14 +168,14 @@ public class RegistrationUI extends JFrame {
         try {
             Person person = personDao.findById(id);
 
-            Address address = null;
-            if (person != null && person.getAddress().getId() != null) {
-                address = addressDao.findById(person.getAddress().getId());
+            if (person != null && person.getAddress() != null && person.getAddress().getId() != null) {
+                Address address = addressDao.findById(person.getAddress().getId());
+                person.setAddress(address);
             }
 
-        CadastroUI cadastro = new CadastroUI(person, this);
-        cadastro.setVisible(true);
-        this.setVisible(false);
+            CadastroUI cadastro = new CadastroUI(person, this);
+            cadastro.setVisible(true);
+            this.setVisible(false);
 
         } catch (Exception erro) {
             JOptionPane.showMessageDialog(this, "Erro ao editar: " + erro.getMessage());
