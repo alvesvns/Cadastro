@@ -7,17 +7,26 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+import entity.Address;
 
 @Getter
 @Setter
 public class Person {
     private Integer id;
+    private Address address;
     private String name;
     private String cpf;
     private String formattedBirth;
     private int age;
     private LocalDate birth;
-    private Integer addressId;
+    
+    public Address getAddress() {
+        return address;
+}
+
+    public void setAddress(Address address) {
+        this.address = address;
+}
     
     public List<String> validate() {
         List<String> erros = new ArrayList<>();
@@ -29,7 +38,7 @@ public class Person {
         return erros;
     }
 
-    private List<String> validateName() {
+    public List<String> validateName() {
         List<String> erros = new ArrayList<>();
         String name = this.getName() == null ? "" : this.getName().trim();
         
@@ -56,27 +65,27 @@ public class Person {
         return erros;
     }
 
-    private List<String> validateAge() {
+    public List<String> validateAge() {
         List<String> erros = new ArrayList<>();
-        LocalDate birth = this.getBirth();
 
         if (birth == null) {
             erros.add("- Data de nascimento inválida");
-        } else {
-            int age = Period.between(birth, LocalDate.now()).getYears();
-            this.setAge(age);
-            if (age < 16) {
-                erros.add("- É necessário ter no mínimo 16 anos");
-            }
+            return erros;
+        }
+
+        int age = Period.between(birth, LocalDate.now()).getYears();
+
+        if (age < 16) {
+            erros.add("- É necessário ter no mínimo 16 anos");
         }
 
         return erros;
     }
 
-    private List<String> validateCpf() {
+    public List<String> validateCpf() {
         List<String> erros = new ArrayList<>();
 
-        if (!isCpfValid(this.getCpf())) { // o "!" Antes vai servir para negação, então fica isCpfInvalid
+        if (!isCpfValid(this.getCpf())) { 
             erros.add("- CPF inválido");
         }
 

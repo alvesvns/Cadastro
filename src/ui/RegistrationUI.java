@@ -4,12 +4,12 @@ import dao.AddressDao;
 import dao.PersonDao;
 import entity.Address;
 import entity.Person;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JFrame;
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -17,7 +17,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
-public class RegistrationUI extends javax.swing.JFrame {
+public class RegistrationUI extends JFrame {
   
     private DefaultTableModel model;
     private final PersonDao personDao = new PersonDao();
@@ -53,8 +53,8 @@ public class RegistrationUI extends javax.swing.JFrame {
         for (Person person : pessoas) {
             Address address = null;
 
-            if (person.getAddressId() != null) {
-                address = addressDao.findById(person.getAddressId());
+            if (person.getAddress().getId() != null) {
+                address = addressDao.findById(person.getAddress().getId());
             }
 
             model.addRow(new Object[] {
@@ -169,11 +169,11 @@ public class RegistrationUI extends javax.swing.JFrame {
             Person person = personDao.findById(id);
 
             Address address = null;
-            if (person != null && person.getAddressId() != null) {
-                address = addressDao.findById(person.getAddressId());
+            if (person != null && person.getAddress().getId() != null) {
+                address = addressDao.findById(person.getAddress().getId());
             }
 
-        CadastroUI cadastro = new CadastroUI(person, address, this);
+        CadastroUI cadastro = new CadastroUI(person, this);
         cadastro.setVisible(true);
         this.setVisible(false);
 
@@ -184,6 +184,16 @@ public class RegistrationUI extends javax.swing.JFrame {
     }
 
     private void onDelete(int row) {
+        int resposta = JOptionPane.showConfirmDialog(
+            this,
+            "Tem certeza que deseja excluir este cadastro?",
+            "Confirmação",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        ); 
+        if (resposta != JOptionPane.YES_OPTION) {
+            return; 
+        }
         try {
             int modelRow = tblCadastro.convertRowIndexToModel(row);
             int id = Integer.parseInt(model.getValueAt(modelRow, 0).toString());

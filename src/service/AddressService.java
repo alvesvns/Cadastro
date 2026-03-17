@@ -6,12 +6,12 @@ import entity.Address;
 public class AddressService {
     private final AddressDao addressDao = new AddressDao();
 
-    public Integer insert(Address address) throws Exception {
+    public Integer save(Address address) throws Exception {
+        if (address.getId() == null) {
         return addressDao.insert(address);
-    }
-
-    public void update(Address address) throws Exception {
+        }
         addressDao.update(address);
+        return address.getId();
     }
 
     public Address findById(int id) throws Exception {

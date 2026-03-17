@@ -2,6 +2,7 @@ package dao;
 
 import infra.Connect;
 import entity.Person;
+import entity.Address;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -13,7 +14,7 @@ import java.util.List;
 public class PersonDao {
 
     public Integer insert(Person person) throws Exception {
-        if (person.getAddressId() == null) throw new Exception("id_address não informado na pessoa.");
+        if (person.getAddress() == null || person.getAddress().getId() == null) throw new Exception("id_address não informado na pessoa.");
 
         String sql = "INSERT INTO person (name, cpf, birth, id_address) VALUES (?, ?, ?, ?)";
 
@@ -23,7 +24,7 @@ public class PersonDao {
             preparedStatement.setString(1, person.getName());
             preparedStatement.setString(2, person.getCpf());
             preparedStatement.setDate(3, Date.valueOf(person.getBirth()));
-            preparedStatement.setInt(4, person.getAddressId());
+            preparedStatement.setInt(4, person.getAddress().getId());
 
             preparedStatement.executeUpdate();
 
@@ -37,7 +38,7 @@ public class PersonDao {
 
     public void update(Person person) throws Exception {
         if (person.getId() == null) throw new Exception("ID da pessoa não informado.");
-        if (person.getAddressId() == null) throw new Exception("id_address não informado na pessoa.");
+        if (person.getAddress().getId() == null) throw new Exception("id_address não informado na pessoa.");
 
         String sql = "UPDATE person SET name=?, cpf=?, birth=?, id_address=? WHERE id=?";
 
@@ -47,7 +48,7 @@ public class PersonDao {
             preparedStatement.setString(1, person.getName());
             preparedStatement.setString(2, person.getCpf());
             preparedStatement.setDate(3, Date.valueOf(person.getBirth()));
-            preparedStatement.setInt(4, person.getAddressId());
+            preparedStatement.setInt(4, person.getAddress().getId());
             preparedStatement.setInt(5, person.getId());
 
             preparedStatement.executeUpdate();
@@ -84,7 +85,7 @@ public class PersonDao {
                 Date date = resultSet.getDate("birth");
                 if (date != null) person.setBirth(date.toLocalDate());
 
-                person.setAddressId(resultSet.getInt("id_address"));
+                person.setAddress(new Address(resultSet.getInt("id_address")));
                 return person;
             }
         }
@@ -107,7 +108,7 @@ public class PersonDao {
                 Date date = resultSet.getDate("birth");
                 if (date != null) person.setBirth(date.toLocalDate());
 
-                person.setAddressId(resultSet.getInt("id_address"));
+                person.setAddress(new Address(resultSet.getInt("id_address")));;
                 list.add(person);
             }
         }
