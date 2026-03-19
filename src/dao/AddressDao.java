@@ -14,7 +14,7 @@ public class AddressDao {
         String sql = "INSERT INTO address (cep, rua, bairro, cidade, uf) VALUES (?, ?, ?, ?, ?)";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, address.getCep());
             preparedStatement.setString(2, address.getRua());
@@ -38,7 +38,7 @@ public class AddressDao {
         String sql = "UPDATE address SET cep=?, rua=?, bairro=?, cidade=?, uf=? WHERE id=?";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setString(1, address.getCep());
             preparedStatement.setString(2, address.getRua());
@@ -51,34 +51,11 @@ public class AddressDao {
         }
     }
 
-    public Address findById(int id) throws Exception {
-        String sql = "SELECT id, cep, rua, bairro, cidade, uf FROM address WHERE id=?";
-
-        try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-
-            preparedStatement.setInt(1, id);
-
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (!resultSet.next()) return null;
-
-                Address address = new Address();
-                address.setId(resultSet.getInt("id"));
-                address.setCep(resultSet.getString("cep"));
-                address.setRua(resultSet.getString("rua"));
-                address.setBairro(resultSet.getString("bairro"));
-                address.setCidade(resultSet.getString("cidade"));
-                address.setUf(resultSet.getString("uf"));
-                return address;
-            }
-        }
-    }
-
     public void deleteById(int id) throws Exception {
         String sql = "DELETE FROM address WHERE id=?";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();

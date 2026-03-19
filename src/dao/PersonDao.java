@@ -19,7 +19,7 @@ public class PersonDao {
         String sql = "INSERT INTO person (name, cpf, birth, id_address) VALUES (?, ?, ?, ?)";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             preparedStatement.setString(1, person.getName());
             preparedStatement.setString(2, person.getCpf());
@@ -43,7 +43,7 @@ public class PersonDao {
         String sql = "UPDATE person SET name=?, cpf=?, birth=?, id_address=? WHERE id=?";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setString(1, person.getName());
             preparedStatement.setString(2, person.getCpf());
@@ -59,7 +59,7 @@ public class PersonDao {
         String sql = "DELETE FROM person WHERE id=?";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
@@ -67,10 +67,14 @@ public class PersonDao {
     }
 
     public Person findById(int id) throws Exception {
-        String sql = "SELECT id, name, cpf, birth, id_address FROM person WHERE id=?";
+        String sql = "SELECT p.id, p.name, p.cpf, p.birth, " +
+                 "a.id AS a_id, a.rua, a.bairro, a.cidade, a.uf, a.cep " +
+                 "FROM person p " +
+                 "LEFT JOIN address a ON a.id = p.id_address " +
+                 "WHERE p.id = ?";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setInt(1, id);
 
@@ -85,19 +89,38 @@ public class PersonDao {
                 Date date = resultSet.getDate("birth");
                 if (date != null) person.setBirth(date.toLocalDate());
 
-                person.setAddress(new Address(resultSet.getInt("id_address")));
+                int addressId = resultSet.getInt("a_id");
+
+                if (!resultSet.wasNull()) {
+                    Address address = new Address();
+                    address.setId(addressId);
+                    address.setCep(resultSet.getString("cep"));
+                    address.setRua(resultSet.getString("rua"));
+                    address.setBairro(resultSet.getString("bairro"));
+                    address.setCidade(resultSet.getString("cidade"));
+                    address.setUf(resultSet.getString("uf"));
+
+                    person.setAddress(address);
+                } else {
+                    person.setAddress(null);
+                }
                 return person;
             }
         }
     }
 
     public List<Person> findAll() throws Exception {
-        String sql = "SELECT id, name, cpf, birth, id_address FROM person ORDER BY id DESC";
+        String sql = "SELECT p.id, p.name, p.cpf, p.birth, " +
+                 "a.id AS a_id, a.rua, a.bairro, a.cidade, a.uf, a.cep " +
+                 "FROM person p " +
+                 "LEFT JOIN address a ON a.id = p.id_address " +
+                 "ORDER BY p.id DESC";
+
         List<Person> list = new ArrayList<>();
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql);
+        ResultSet resultSet = preparedStatement.executeQuery()) {
 
             while (resultSet.next()) {
                 Person person = new Person();
@@ -108,11 +131,24 @@ public class PersonDao {
                 Date date = resultSet.getDate("birth");
                 if (date != null) person.setBirth(date.toLocalDate());
 
-                person.setAddress(new Address(resultSet.getInt("id_address")));;
+                int addressId = resultSet.getInt("a_id");
+
+                if (!resultSet.wasNull()) {
+                    Address address = new Address();
+                    address.setId(addressId);
+                    address.setRua(resultSet.getString("rua"));
+                    address.setBairro(resultSet.getString("bairro"));
+                    address.setCidade(resultSet.getString("cidade"));
+                    address.setUf(resultSet.getString("uf"));
+                    address.setCep(resultSet.getString("cep"));
+
+                    person.setAddress(address);
+                } else {
+                    person.setAddress(null);
+                }
                 list.add(person);
             }
         }
-
         return list;
     }
 
@@ -120,7 +156,7 @@ public class PersonDao {
         String sql = "SELECT 1 FROM person WHERE cpf=? LIMIT 1";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setString(1, cpf);
 
@@ -134,7 +170,7 @@ public class PersonDao {
         String sql = "SELECT 1 FROM person WHERE cpf=? AND id<>? LIMIT 1";
 
         try (Connection conn = Connect.getConnection();
-             PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+        PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
 
             preparedStatement.setString(1, cpf);
             preparedStatement.setInt(2, id);

@@ -389,22 +389,6 @@ public class CadastroUI extends JFrame {
         try {
             PersonService personService = new PersonService();
 
-            if (isInsert) {
-                if (personService.existsByCpf(cpf)) {
-                    JOptionPane.showMessageDialog(this, "CPF já cadastrado!");
-                    return;
-                }
-            } else {
-                if (personService.existsByCpfAndNotId(cpf, person.getId())) {
-                    JOptionPane.showMessageDialog(this, "CPF já cadastrado em outro cadastro!");
-                    return;
-                }
-
-                if (person.getAddress() != null && person.getAddress().getId() != null) {
-                    address.setId(person.getAddress().getId());
-                }
-            }
-
             personService.save(person);
 
             if (isInsert) {
@@ -415,7 +399,6 @@ public class CadastroUI extends JFrame {
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Erro ao salvar: " + e.getMessage());
-            return;
         }
 
         if (parentList != null) {

@@ -45,40 +45,22 @@ public class RegistrationUI extends JFrame {
     }
     
     public void updateTable() {
-    model.setRowCount(0);
+        model.setRowCount(0);
 
-    try {
-        List<Person> pessoas = personDao.findAll();
+        try {
+            List<Person> pessoas = personDao.findAll();
 
-        for (Person person : pessoas) {
-            Address address = null;
-
-            if (person.getAddress().getId() != null) {
-                address = addressDao.findById(person.getAddress().getId());
+            for (Person person : pessoas) {
+                addPersonToTable(person);
             }
 
-            model.addRow(new Object[] {
-                person.getId(),
-                person.getName(),
-                person.getBirth(),
-                person.getCpf(),
-                (address != null ? address.getRua() : ""),
-                (address != null ? address.getBairro() : ""),
-                (address != null ? address.getCidade() : ""),
-                (address != null ? address.getUf() : ""),
-                (address != null ? address.getCep() : ""),
-                "Editar",
-                "Excluir"
-            });
+            updateEmptyMessage();
+
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(this, "Erro ao carregar: " + erro.getMessage());
+            erro.printStackTrace();
         }
-
-        updateEmptyMessage();
-
-    } catch (Exception erro) {
-        JOptionPane.showMessageDialog(this, "Erro ao carregar: " + erro.getMessage());
-        erro.printStackTrace();
     }
-}
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -168,11 +150,6 @@ public class RegistrationUI extends JFrame {
         try {
             Person person = personDao.findById(id);
 
-            if (person != null && person.getAddress() != null && person.getAddress().getId() != null) {
-                Address address = addressDao.findById(person.getAddress().getId());
-                person.setAddress(address);
-            }
-
             CadastroUI cadastro = new CadastroUI(person, this);
             cadastro.setVisible(true);
             this.setVisible(false);
@@ -219,22 +196,19 @@ public class RegistrationUI extends JFrame {
     private void btnNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNovoActionPerformed
         CadastroUI cadastro = new CadastroUI();
         cadastro.setVisible(true);
-        this.dispose();
     }//GEN-LAST:event_btnNovoActionPerformed
     public static void main(String args[]) {
 
         java.awt.EventQueue.invokeLater(() -> new RegistrationUI().setVisible(true));
     }
     class ButtonRenderer extends JButton implements TableCellRenderer {
-    public ButtonRenderer() { setOpaque(true); }
+        public ButtonRenderer() { setOpaque(true); }
 
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value,
-            boolean isSelected, boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         setText(value == null ? "" : value.toString());
         return this;
-    }
-}
+    }}
 
     class ButtonEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
         private final JButton button = new JButton();
@@ -261,8 +235,25 @@ public class RegistrationUI extends JFrame {
 
         if ("Editar".equals(text)) onEdit(row);
         if ("Excluir".equals(text)) onDelete(row);
+    }}
+    
+    private void addPersonToTable(Person person) {
+        Address address = person.getAddress();
+
+        model.addRow(new Object[] {
+            person.getId(),
+            person.getName(),
+            person.getBirth(),
+            person.getCpf(),
+            (address != null ? address.getRua() : ""),
+            (address != null ? address.getBairro() : ""),
+            (address != null ? address.getCidade() : ""),
+            (address != null ? address.getUf() : ""),
+            (address != null ? address.getCep() : ""),
+            "Editar",
+            "Excluir"
+        });
     }
-}
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
