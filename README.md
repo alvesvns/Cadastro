@@ -76,7 +76,7 @@ O sistema possui todas as operações de gerenciamento:
 ---
 
 ## 📂 Estrutura do Projeto
->![Foto-Estrutura.png](..%2F..%2F..%2FUsers%2Fkaran%2FDownloads%2FFoto-Estrutura.png)
+>![Foto-Estrutura.png](images%2FFoto-Estrutura.png)
 
 ### 📌 Organização
 
